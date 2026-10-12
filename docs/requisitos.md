@@ -8,6 +8,7 @@ O sistema será desenvolvido em Java, utilizando Java Swing para a interface gr�
 A votação será realizada em duas etapas, seguindo esta ordem:
 
 **1. Deputado Federal:** o eleitor deverá digitar um número de quatro dígitos.
+
 **2. Presidente:** o eleitor deverá digitar um número de dois dígitos.
 
 Cada cargo terá três candidatos fictícios, totalizando seis candidatos na simulação.
@@ -18,17 +19,29 @@ Os candidatos e partidos serão fictícios, e a definição dos nomes, números 
 Os requisitos funcionais descrevem as ações que o sistema deverá permitir.
 
 **RF01 — Iniciar votação:** permitir o início de uma sessão de votação.
+
 **RF02 — Exibir cargo:** mostrar na tela o cargo para o qual o eleitor deverá votar.
+
 **RF03 — Digitar número:** permitir que o eleitor informe o número do candidato por meio do teclado da urna.
+
 **RF04 — Identificar candidato:** apresentar o nome, o número e o partido do candidato quando o número digitado corresponder a um candidato cadastrado.
+
 **RF05 — Corrigir escolha:** permitir que o eleitor apague a escolha atual antes da confirmação e digite outro número.
+
 **RF06 — Voto em branco:** permitir que o eleitor selecione a opção de voto em branco.
+
 **RF07 — Confirmar voto:** registrar a escolha após o eleitor pressionar o botão “Confirma”, respeitando as validações do sistema.
+
 **RF08 — Número não encontrado:** exibir uma mensagem informando que o candidato não foi encontrado quando o número digitado não corresponder a um candidato cadastrado.
+
 **RF09 — Número incompleto:** exibir uma mensagem informando que o número digitado está incompleto quando não possuir a quantidade de dígitos exigida para o cargo.
+
 **RF10 — Avançar votação:** após a confirmação do voto para Deputado Federal, avançar para a votação de Presidente.
+
 **RF11 — Encerrar votação:** após a confirmação do voto para Presidente, finalizar a sessão de votação.
+
 **RF12 — Armazenar votos:** armazenar os votos no Firebase Cloud Firestore, conforme a estrutura de dados definida pela equipe.
+
 **RF13 — Apresentar resultados:** permitir a apuração e a apresentação dos resultados da votação, conforme as regras estabelecidas para a simulação.
 
 ## 4. Regras de negócio:
