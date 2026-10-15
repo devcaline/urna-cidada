@@ -7,7 +7,7 @@ As regras detalhadas e os requisitos funcionais do sistema estão documentados n
 Eleitor: pessoa que utiliza a urna eletrônica educativa para participar da votação simulada.
 
 ## 3. Lista de casos de uso
-| Código | Caso de uso    |    Objetivo |
+| Código | Caso de uso    |        Objetivo |
 
 | UC01 | Iniciar votação | Começar uma sessão de votação |
 
