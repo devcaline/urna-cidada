@@ -25,6 +25,7 @@ Eleitor: pessoa que utiliza a urna eletrônica educativa para participar da vota
 ## 4. Descrição dos casos de uso
 
 **UC01**  — Iniciar votação
+---
 
 **Ator principal:**  Eleitor
 
