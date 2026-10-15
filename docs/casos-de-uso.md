@@ -66,6 +66,8 @@ Eleitor: pessoa que utiliza a urna eletrônica educativa para participar da vota
 
 **Pós-condição:** a escolha está apresentada para conferência, mas ainda não foi registrada como voto confirmado
 
+---
+
 **UC03**  — Corrigir escolha
 
 **Ator principal:**  Eleitor
@@ -79,20 +81,96 @@ Eleitor: pessoa que utiliza a urna eletrônica educativa para participar da vota
 2. O eleitor pressiona o botão Corrige
 3. O sistema limpa a escolha atual
 4. O eleitor informa um novo número ou seleciona outra opção disponível
+
 **Fluxo alternativo:** 
 ° Se não houver uma escolha digitada, o comportamento do botão deverá seguir a regra definida pela equipe
 
 **Pós-condição:**  a escolha anterior foi limpa e o eleitor pode realizar uma nova seleção.
 
+---
 
+**UC04**  — Escolher voto em branco
 
+**Ator principal:**  Eleitor
 
+**Objetivo:**  selecionar a opção de voto em branco para o cargo atual
 
+**Pré-condição:**  a votação deve estar em andamento e o voto atual ainda não pode ter sido confirmado
 
+**Fluxo principal:** 
+1. O eleitor pressiona o botão Branco
+2. O sistema apresenta a indicação de voto em branco
+3. O eleitor confere a opção selecionada
+4. O eleitor decide se deseja confirmar ou corrigir a escolha
 
+**Pós-condição:**  a opção de voto em branco está selecionada, aguardando confirmação
 
+---
 
+**UC05** — Confirmar voto
 
+**Ator principal:** Eleitor
+
+**Objetivo:** registrar definitivamente a escolha realizada para o cargo atual
+
+**Pré-condição:** deve existir uma escolha que possa ser confirmada, seja um candidato identificado ou a opção de voto em branco
+
+**Fluxo principal:**
+1. O eleitor confere a escolha apresentada na tela
+2. O eleitor pressiona o botão Confirma
+3. O sistema valida a escolha
+4. O sistema registra o voto
+5. O sistema impede que o eleitor altere o voto confirmado
+
+**Fluxo alternativo**
+Se a escolha não atender às condições de confirmação, o sistema apresenta uma mensagem apropriada e não registra o voto como confirmado
+
+**Pós-condição:** o voto foi registrado e não pode ser alterado pelo eleitor
+
+---
+
+**UC06** — Avançar para o próximo cargo
+
+**Ator principal:** Eleitor
+
+**Objetivo:** permitir a continuidade da votação após a confirmação do voto para Deputado Federal
+
+**Pré-condição:** o voto para Deputado Federal deve ter sido confirmado
+
+**Fluxo principal:**
+1. O sistema conclui o registro do primeiro voto
+2. O sistema apresenta a tela de votação para Presidente
+3. O eleitor pode iniciar a escolha para o segundo cargo
+
+**Pós-condição:** a votação está na etapa de escolha para Presidente.
+
+---
+
+**UC07** — Encerrar votação
+
+**Ator principal:** Eleitor
+
+**Objetivo:** finalizar a sessão após a conclusão das escolhas previstas
+
+**Pré-condição:** o eleitor deve estar na etapa de votação para Presidente
+
+**Fluxo principal:**
+1. O eleitor escolhe e confere sua opção para Presidente
+2. O eleitor pressiona Confirma
+3. O sistema valida e registra o voto
+4. O sistema finaliza a sessão de votação
+5. O sistema informa que a votação foi concluída
+
+**Pós-condição:** a sessão de votação foi encerrada e os votos confirmados foram registrados conforme as regras do sistema
+
+---
+
+## 5. Relação com os requisitos:
+
+Os casos de uso deste documento complementam os requisitos registrados em requisitos.md. Enquanto os requisitos especificam as funcionalidades e regras que o sistema deverá atender, os casos de uso descrevem como o eleitor interage com a urna para realizar a votação.
+
+## 6. Histórico de alterações
+Versão 1.0: criação inicial da documentação de casos de uso da Urna Cidadã.
 
 
 
