@@ -44,7 +44,9 @@ Eleitor: pessoa que utiliza a urna eletrônica educativa para participar da vota
 **Ator principal:** Eleitor
 
 **Objetivo:** selecionar um candidato e conferir suas informações antes de registrar o voto
+
 **Pré-condição:** a votação deve estar iniciada e um cargo deve estar sendo apresentado
+
 **Fluxo principal:** 
 1. O eleitor digita o número do candidato
 2. O sistema verifica se a quantidade de dígitos está correta e procura o número no cadastro de candidatos
@@ -53,12 +55,32 @@ Eleitor: pessoa que utiliza a urna eletrônica educativa para participar da vota
 5. O eleitor decide se deseja corrigir a escolha ou confirmá-la
 
 **Fluxos alternativos:**
+
 ° **Número incompleto:** o sistema informa que a digitação está incompleta
+
 ° **Candidato não encontrado:** o sistema apresenta uma mensagem informativa e aguarda o procedimento definido para essa situação
-° **Escolha incorreta:** o eleitor pode utilizar a função de correção antes de confirmar o 
+
+° **Escolha incorreta:** o eleitor pode utilizar a função de correção antes de confirmar o voto
 
 **Pós-condição:** a escolha está apresentada para conferência, mas ainda não foi registrada como voto confirmado
 
+**UC03**  — Corrigir escolha
+
+**Ator principal:**  Eleitor
+
+**Objetivo:**  permitir que o eleitor altere a escolha antes da confirmação definitiva
+
+**Pré-condição:**  a votação deve estar em andamento e o voto atual ainda não pode ter sido confirmado
+
+**Fluxo principal:** 
+1. O eleitor percebe que deseja alterar a escolha apresentada
+2. O eleitor pressiona o botão Corrige
+3. O sistema limpa a escolha atual
+4. O eleitor informa um novo número ou seleciona outra opção disponível
+**Fluxo alternativo:** 
+° Se não houver uma escolha digitada, o comportamento do botão deverá seguir a regra definida pela equipe
+
+**Pós-condição:**  a escolha anterior foi limpa e o eleitor pode realizar uma nova seleção.
 
 
 
