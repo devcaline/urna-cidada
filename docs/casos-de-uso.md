@@ -171,11 +171,12 @@ Eleitor: pessoa que utiliza a urna eletrônica educativa para participar da vota
 
 Os casos de uso deste documento complementam os requisitos registrados em **requisitos.md**. Enquanto os requisitos especificam as funcionalidades e regras que o sistema deverá atender, os casos de uso descrevem como o eleitor interage com a urna para realizar a votação.
 
-## 6. Histórico de alterações
+## 6. Histórico de alterações:
 Versão 1.0: criação inicial da documentação de casos de uso da Urna Cidadã.
 
+## 7. Diagrama de casos de uso:
 
-
+![Diagrama de casos de uso da Urna Cidadã](<Diagrama casos-de-uso.png>)
 
 
 
