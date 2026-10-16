@@ -82,7 +82,8 @@ Eleitor: pessoa que utiliza a urna eletrônica educativa para participar da vota
 3. O sistema limpa a escolha atual
 4. O eleitor informa um novo número ou seleciona outra opção disponível
 
-**Fluxo alternativo:** 
+**Fluxo alternativo:**
+
 ° Se não houver uma escolha digitada, o comportamento do botão deverá seguir a regra definida pela equipe
 
 **Pós-condição:**  a escolha anterior foi limpa e o eleitor pode realizar uma nova seleção.
@@ -123,7 +124,8 @@ Eleitor: pessoa que utiliza a urna eletrônica educativa para participar da vota
 5. O sistema impede que o eleitor altere o voto confirmado
 
 **Fluxo alternativo**
-Se a escolha não atender às condições de confirmação, o sistema apresenta uma mensagem apropriada e não registra o voto como confirmado
+
+° Se a escolha não atender às condições de confirmação, o sistema apresenta uma mensagem apropriada e não registra o voto como confirmado
 
 **Pós-condição:** o voto foi registrado e não pode ser alterado pelo eleitor
 
