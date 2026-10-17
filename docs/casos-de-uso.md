@@ -8,23 +8,63 @@ Eleitor: pessoa que utiliza a urna eletrônica educativa para participar da vota
 
 ## 3. Lista de casos de uso
 
-| **Código:**  UC01 | **Caso de uso:** Iniciar votação | **Objetivo:** Começar uma sessão de votação |
+| **Código:**  UC01 | **Caso de uso:** Iniciar votação | **Objetivo:** Começar uma sessão de votação | **Responsável:** Mesário | 
 
-| **Código:** UC02 | **Caso de uso:** Escolher candidato | **Objetivo:** Informar o número e conferir os dados do candidato desejado |
+| **Código:** UC02 | **Caso de uso:** Escolher candidato | **Objetivo:** Informar o número e conferir os dados do candidato desejado |  **Responsável:** Mesário | 
 
-| **Código:** UC03 | **Caso de uso:** Corrigir escolha | **Objetivo:** Substituir uma escolha ainda não confirmada |
+| **Código:** UC03 | **Caso de uso:** Corrigir escolha | **Objetivo:** Substituir uma escolha ainda não confirmada |  **Responsável:** Eleitor | 
 
-| **Código:** UC04 | **Caso de uso:** Escolher voto em branco | **Objetivo:** Optar por não selecionar um candidato para o cargo atual |
+| **Código:** UC04 | **Caso de uso:** Escolher voto em branco | **Objetivo:** Optar por não selecionar um candidato para o cargo atual |  **Responsável:** Eleitor | 
 
-| **Código:** UC05 | **Caso de uso:** Confirmar voto | **Objetivo:** Registrar definitivamente a escolha realizada |
+| **Código:** UC05 | **Caso de uso:** Confirmar voto | **Objetivo:** Registrar definitivamente a escolha realizada |  **Responsável:** Eleitor | 
 
-| **Código:** UC06 | **Caso de uso:** Avançar para o próximo cargo | **Objetivo:** Continuar a votação após a confirmação do voto atual |
+| **Código:** UC06 | **Caso de uso:** Avançar para o próximo cargo | **Objetivo:** Continuar a votação após a confirmação do voto atual |  **Responsável:** Eleitor | 
 
-| **Código:** UC07 | **Caso de uso:** Encerrar votação | **Objetivo:** Finalizar a sessão após a última confirmação |
+| **Código:** UC07 | **Caso de uso:** Encerrar votação | **Objetivo:** Finalizar a sessão após a autorização do mesário |  **Responsável:** Mesário | 
+
+| **Código:** UC08 |  **Caso de uso:** Autenticar mesário | **Objetivo:** Validar a senha para permitir o acesso a área administrativa |  **Responsável:** Mesário | 
+
+| **Código:** UC09 |  **Caso de uso:** Consultar resultados da votação | **Objetivo:** Consultar a apuração inicial ou final, conforme a sessão e as permissões de acesso |  **Responsável:** Mesário | 
 
 ## 4. Descrição dos casos de uso
 
-**UC01**  — Iniciar votação
+**UC01** — Iniciar votação
+
+**Ator principal:** Mesário.
+
+**Objetivo:** liberar a sessão geral para receber votos.
+
+**Pré-condições:**
+
+° A sessão de votação ainda não foi iniciada.
+
+° O mesário possui autorização para acessar a área administrativa.
+
+° Os resultados iniciais podem ser consultados.
+
+***Fluxo principal:**
+
+1. O mesário acessa a área administrativa.
+2. O sistema solicita a autenticação por senha.
+3. O mesário informa a senha.
+4. O sistema valida a senha e permite o acesso autorizado.
+5. O mesário consulta os resultados iniciais.
+6. O sistema apresenta a quantidade inicial de votos e os percentuais dos candidatos.
+7. O mesário verifica se não existem votos registrados e se os candidatos apresentam zero votos e zero por cento.
+8. O mesário autoriza o início da votação.
+9. O sistema altera o estado da sessão para em andamento e disponibiliza a urna para o primeiro eleitor.
+
+**Fluxos alternativos:**
+
+° **Senha inválida:** o sistema informa que a autenticação não foi realizada e não libera o acesso administrativo.
+
+° **Resultados iniciais diferentes de zero:** o sistema não libera o início da votação até que a situação seja verificada e resolvida pela equipe autorizada.
+
+**Pós-condição:** a sessão geral está em andamento e pode receber votos.
+
+---
+
+**UC02**  — Iniciar votação
 
 **Ator principal:**  Eleitor
 
@@ -41,7 +81,7 @@ Eleitor: pessoa que utiliza a urna eletrônica educativa para participar da vota
 
 ---
 
-**UC02**  — Escolher 
+**UC03**  — Escolher 
 
 **Ator principal:** Eleitor
 
@@ -68,7 +108,7 @@ Eleitor: pessoa que utiliza a urna eletrônica educativa para participar da vota
 
 ---
 
-**UC03**  — Corrigir escolha
+**UC04**  — Corrigir escolha
 
 **Ator principal:**  Eleitor
 
@@ -90,7 +130,7 @@ Eleitor: pessoa que utiliza a urna eletrônica educativa para participar da vota
 
 ---
 
-**UC04**  — Escolher voto em branco
+**UC05**  — Escolher voto em branco
 
 **Ator principal:**  Eleitor
 
@@ -108,7 +148,7 @@ Eleitor: pessoa que utiliza a urna eletrônica educativa para participar da vota
 
 ---
 
-**UC05** — Confirmar voto
+**UC06** — Confirmar voto
 
 **Ator principal:** Eleitor
 
@@ -131,7 +171,7 @@ Eleitor: pessoa que utiliza a urna eletrônica educativa para participar da vota
 
 ---
 
-**UC06** — Avançar para o próximo cargo
+**UC07** — Avançar para o próximo cargo
 
 **Ator principal:** Eleitor
 
@@ -148,7 +188,7 @@ Eleitor: pessoa que utiliza a urna eletrônica educativa para participar da vota
 
 ---
 
-**UC07** — Encerrar votação
+**UC08** — Encerrar votação
 
 **Ator principal:** Eleitor
 
