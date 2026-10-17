@@ -64,57 +64,52 @@ Eleitor: pessoa que utiliza a urna eletrônica educativa para participar da vota
 
 ---
 
-**UC02**  — Iniciar votação
+**UC02**  — Escolher candidato
 
-**Ator principal:**  Eleitor
+**Ator principal:** Eleitor.
 
-**Objetivo:**  iniciar a participação na votação simulada.
+**Objetivo:** selecionar um candidato e consultar suas informações antes de registrar o voto.
 
-**Pré-condição:**  a urna deve estar disponível para iniciar uma sessão.
+**Pré-condições:**
 
-**Fluxo principal:** 
-1. O eleitor inicia a votação.
-2. O sistema apresenta a tela correspondente ao cargo de Deputado Federal.
-3. O eleitor visualiza as informações necessárias para começar a escolha.
+° A sessão geral está em andamento.
 
-**Pós-condição:**  a votação está iniciada e pronta para receber a primeira escolha.
+° O eleitor está na etapa de votação correspondente ao cargo atual.
 
----
+**Fluxo principal:**
 
-**UC03**  — Escolher 
+1. O eleitor digita o número do candidato.
 
-**Ator principal:** Eleitor
+2. O sistema verifica se a quantidade de dígitos está correta e procura o número no cadastro de candidatos.
 
-**Objetivo:** selecionar um candidato e conferir suas informações antes de registrar o voto
+3. Quando encontra um candidato correspondente, o sistema apresenta seu nome, número e partido.
 
-**Pré-condição:** a votação deve estar iniciada e um cargo deve estar sendo apresentado
+4. O eleitor confere os dados apresentados.
 
-**Fluxo principal:** 
-1. O eleitor digita o número do candidato
-2. O sistema verifica se a quantidade de dígitos está correta e procura o número no cadastro de candidatos
-3. Quando encontra um candidato correspondente, o sistema apresenta seu nome, número e partido
-4. O eleitor confere os dados apresentados
-5. O eleitor decide se deseja corrigir a escolha ou confirmá-la
+5. O eleitor decide se deseja corrigir ou confirmar a escolha.
 
 **Fluxos alternativos:**
 
-° **Número incompleto:** o sistema informa que a digitação está incompleta
+° **Número incompleto:** o sistema informa que a digitação está incompleta.
 
-° **Candidato não encontrado:** o sistema apresenta uma mensagem informativa e aguarda o procedimento definido para essa situação
+° **Candidato não encontrado:** o sistema apresenta uma mensagem informativa e permite que o eleitor corrija a escolha.
 
-° **Escolha incorreta:** o eleitor pode utilizar a função de correção antes de confirmar o voto
+° **Escolha a ser corrigida:** o eleitor pode utilizar a função Corrige antes de confirmar o voto.
 
-**Pós-condição:** a escolha está apresentada para conferência, mas ainda não foi registrada como voto confirmado
+**Pós-condição:** a escolha está apresentada para conferência, mas ainda não foi registrada como voto confirmado.
 
 ---
 
-**UC04**  — Corrigir escolha
+**UC03**  — Corrigir escolha
 
-**Ator principal:**  Eleitor
+**Ator principal:** Eleitor
 
-**Objetivo:**  permitir que o eleitor altere a escolha antes da confirmação definitiva
+**Objetivo:** permitir que o eleitor altere a escolha antes da confirmação definitiva.
 
-**Pré-condição:**  a votação deve estar em andamento e o voto atual ainda não pode ter sido confirmado
+**Pré-condições:**
+° A sessão geral está em andamento.
+
+° O voto do cargo atual ainda não foi confirmado.
 
 **Fluxo principal:** 
 1. O eleitor percebe que deseja alterar a escolha apresentada
@@ -122,11 +117,32 @@ Eleitor: pessoa que utiliza a urna eletrônica educativa para participar da vota
 3. O sistema limpa a escolha atual
 4. O eleitor informa um novo número ou seleciona outra opção disponível
 
-**Fluxo alternativo:**
+**Fluxos alternativos:**
 
-° Se não houver uma escolha digitada, o comportamento do botão deverá seguir a regra definida pela equipe
+° **Nenhuma escolha digitada:** se não houver uma escolha digitada, o sistema segue o comportamento definido pela equipe para essa situação.
 
-**Pós-condição:**  a escolha anterior foi limpa e o eleitor pode realizar uma nova seleção.
+**Pós-condição:** a escolha anterior foi limpa e o eleitor pode realizar uma nova seleção
+
+---
+
+**UC04**  — Escolher voto em branco
+
+**Ator principal:**  Eleitor
+
+**Objetivo:**  selecionar a opção de voto em branco para o cargo atual
+
+**Pré-condição:**  
+° A sessão geral está em andamento.
+
+° O voto do cargo atual ainda não foi confirmado.
+
+**Fluxo principal:** 
+1. O eleitor pressiona o botão Branco
+2. O sistema apresenta a indicação de voto em branco
+3. O eleitor confere a opção selecionada
+4. O eleitor pressiona o botão Confirma para registrar o voto em branco
+
+**Pós-condição:**  o voto em branco é registrado após a confirmação válida
 
 ---
 
