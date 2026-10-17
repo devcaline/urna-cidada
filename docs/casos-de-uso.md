@@ -42,7 +42,7 @@ Eleitor: pessoa que utiliza a urna eletrônica educativa para participar da vota
 
 ° Os resultados iniciais podem ser consultados.
 
-***Fluxo principal:**
+**Fluxo principal:**
 
 1. O mesário acessa a área administrativa.
 2. O sistema solicita a autenticação por senha.
