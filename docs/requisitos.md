@@ -18,7 +18,7 @@ Os candidatos e partidos serão fictícios, e a definição dos nomes, números 
 ## 3. Requisitos funcionais: 
 Os requisitos funcionais descrevem as ações que o sistema deverá permitir.
 
-**RF01 — Iniciar votação:** permitir o início de uma sessão de votação.
+**RF01 — Iniciar votação:** permitir o início de uma sessão de votação por um mesário autorizado.
 
 **RF02 — Exibir cargo:** mostrar na tela o cargo para o qual o eleitor deverá votar.
 
@@ -43,6 +43,25 @@ Os requisitos funcionais descrevem as ações que o sistema deverá permitir.
 **RF12 — Armazenar votos:** armazenar os votos no Firebase Cloud Firestore, conforme a estrutura de dados definida pela equipe.
 
 **RF13 — Apresentar resultados:** permitir a apuração e a apresentação dos resultados da votação, conforme as regras estabelecidas para a simulação.
+
+**RF14 — Autenticação dos mesários:** permitir que os mesários acessem a área administrativa mediante autenticação por senha.
+
+**RF15 — Conferir contabilização inicial:** exibir aos mesários a quantidade de votos registrados e as porcentagens dos candidatos antes do início da votação, permitindo verificar se todos os valores estão zerados.
+
+**RF16 — Liberar votação:** permitir que um mesário autorizado inicie a sessão após conferir a contabilização inicial.
+
+**RF17 — Encerrar sessão administrativa:** permitir que um mesário autorizado encerre a sessão geral de votação mediante autenticação por senha.
+
+**RF18 — Consultar apuração final:** permitir que os mesários consultem a quantidade de votos e as porcentagens dos candidatos após o encerramento da sessão.
+
+**RF19 — Restringir acesso administrativo:** impedir que os eleitores acessem a área administrativa, a senha dos mesários e os resultados da votação.
+
+**RF20 — Controlar estado da sessão:** controlar os estados da votação, distinguindo sessão não iniciada, sessão em andamento e sessão encerrada.
+
+**RF21 — Apresentar vídeos dos candidatos:** permitir a exibição dos vídeos dos candidatos fictícios durante a etapa educativa de campanha, apresentando seus nomes, números, partidos e propostas.
+
+**RF22 — Disponibilizar números dos candidatos:** permitir que os alunos consultem os números dos candidatos durante a campanha e os anotem para utilizá-los na simulação da votação.
+
 
 ## 4. Regras de negócio:
 As regras de negócio determinam como a votação deverá funcionar.
@@ -69,11 +88,41 @@ As regras de negócio determinam como a votação deverá funcionar.
 
 **RN11 — Número incompleto:** quando o número digitado não possuir a quantidade de dígitos exigida para o cargo, o sistema deverá informar que a digitação está incompleta.
 
-**RN12 — Candidatos e partidos fictícios:** a simulação utilizará candidatos e partidos fictícios, sem vínculo com candidatos ou partidos políticos reais. A equipe definirá conjuntamente os nomes, números e partidos.
+**RN12 — Candidatos e partidos fictícios:** a simulação utilizará candidatos e partidos fictícios, sem vínculo com candidatos ou partidos políticos reais. A equipe definirá em conjunto os nomes, números e partidos.
 
 **RN13 — Imutabilidade do voto confirmado:** depois de confirmado, o voto não poderá ser alterado pelo eleitor. O sistema deverá avançar para o próximo cargo ou encerrar a sessão, conforme a etapa da votação.
 
 **RN14 — Identificação exclusiva:** cada candidato deverá possuir um número próprio e exclusivo dentro do respectivo cargo, evitando ambiguidades na identificação durante a votação.
+
+**RN15 — Acesso restrito aos mesários:** somente os integrantes autorizados da equipe, que exercerão a função de mesários, poderão acessar a área administrativa mediante senha.
+
+**RN16 — Conferência inicial obrigatória:** antes de liberar a votação, os mesários deverão verificar se não existem votos registrados na sessão e se todos os candidatos apresentam zero votos e 0% na contabilização inicial.
+
+**RN17 — Liberação da sessão:** a votação somente poderá começar após a autenticação de um mesário e a conferência da contabilização inicial.
+
+**RN18 — Sigilo da senha administrativa:** a senha de acesso à área administrativa não deverá ser exibida na tela de votação nem disponibilizada aos eleitores.
+
+**RN19 — Restrição de resultados durante a votação:** os eleitores não poderão consultar a contabilização dos votos ou as porcentagens dos candidatos enquanto a sessão estiver em andamento.
+
+**RN20 — Encerramento por mesário:** o encerramento da sessão geral deverá ser realizado por um mesário autorizado, mediante autenticação por senha.
+
+**RN21 — Consulta dos resultados após o encerramento:** a apuração final deverá ficar disponível apenas na área administrativa, após o encerramento da sessão de votação.
+
+**RN22 — Integridade dos resultados:** a contabilização deverá considerar os votos efetivamente confirmados e registrados, sem contabilizar escolhas ainda não confirmadas.
+
+**RN23 — Controle dos estados da sessão:** a urna deverá impedir que os eleitores votem antes da liberação da sessão ou após seu encerramento.
+
+**RN24 — Proteção da área administrativa:** o acesso aos resultados e às funcionalidades administrativas deverão ser protegidos pela lógica do sistema e pelas permissões de acesso aos dados, não apenas pela ocultação de telas ou botões.
+
+**RN25 — Campanha educativa:** antes do início da votação, os alunos poderão assistir aos vídeos dos candidatos fictícios para conhecer seus nomes, números, partidos e propostas.
+
+**RN26 — Igualdade de apresentação:** os vídeos deverão seguir critérios previamente definidos pela equipe, como duração aproximada, formato e tempo de apresentação.
+
+**RN27 — Anotação dos números:** os alunos poderão anotar os números dos candidatos durante a campanha e consultar suas próprias anotações durante a simulação da votação.
+
+**RN28 — Separação entre campanha e votação:** a apresentação dos vídeos e a anotação dos números deverão ocorrer antes da abertura da sessão de votação pelos mesários.
+
+**RN29 — Caráter fictício da campanha:** os vídeos, nomes, partidos e propostas deverão ser elaborados para fins educativos e identificados como parte de uma simulação, sem representar candidaturas ou partidos políticos reais.
 
 ## 5. Fluxo básico da votação:
 1. O eleitor inicia a sessão de votação.
@@ -158,4 +207,4 @@ O sistema será considerado de acordo com os requisitos básicos quando:
 ° Registrar os votos conforme as regras e a estrutura de armazenamento aprovadas pela equipe.
 
 ## 9. Histórico de alterações
-Versão 1.0: criação inicial da documentação de requisitos, com a definição dos cargos, da ordem de votação, das regras básicas e das pendências para discussão da equipe.
+Versão 2.0: criação inicial da documentação de requisitos, com a definição dos cargos, da ordem de votação, das regras básicas e das pendências para discussão da equipe.
