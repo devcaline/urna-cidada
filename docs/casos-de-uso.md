@@ -290,7 +290,7 @@ Versão 1.1: atualização dos casos de uso para incluir autenticação do mesá
 
 ## 7. Diagrama de casos de uso:
 
-![Diagrama de casos de uso da Urna Cidadã](<Diagrama casos-de-uso.png>)
+![Diagrama de casos de uso da Urna Cidadã](<Diagrama caso-de-uso.png>)
 
 
 
