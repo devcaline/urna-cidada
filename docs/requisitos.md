@@ -207,4 +207,6 @@ O sistema será considerado de acordo com os requisitos básicos quando:
 ° Registrar os votos conforme as regras e a estrutura de armazenamento aprovadas pela equipe.
 
 ## 9. Histórico de alterações
-Versão 2.0: criação inicial da documentação de requisitos, com a definição dos cargos, da ordem de votação, das regras básicas e das pendências para discussão da equipe.
+Versão 1.0: criação inicial da documentação de requisitos, com a definição dos cargos, da ordem de votação, das regras básicas e das pendências para discussão da equipe.
+
+Versão 1.1: Atualização dos requisitos para incluir a autenticação dos mesários, a verificação dos resultados iniciais, o controle de abertura e encerramento da sessão geral e a consulta aos resultados finais. Inclusão das regras de acesso à área administrativa e registro da campanha educativa com vídeos dos candidatos como funcionalidade ainda pendente de definição.
