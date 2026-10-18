@@ -146,82 +146,134 @@ Eleitor: pessoa que utiliza a urna eletrônica educativa para participar da vota
 
 ---
 
-**UC05**  — Escolher voto em branco
+**UC05**  — Confirmar voto
 
 **Ator principal:**  Eleitor
 
-**Objetivo:**  selecionar a opção de voto em branco para o cargo atual
-
-**Pré-condição:**  a votação deve estar em andamento e o voto atual ainda não pode ter sido confirmado
-
-**Fluxo principal:** 
-1. O eleitor pressiona o botão Branco
-2. O sistema apresenta a indicação de voto em branco
-3. O eleitor confere a opção selecionada
-4. O eleitor decide se deseja confirmar ou corrigir a escolha
-
-**Pós-condição:**  a opção de voto em branco está selecionada, aguardando confirmação
-
----
-
-**UC06** — Confirmar voto
-
-**Ator principal:** Eleitor
-
 **Objetivo:** registrar definitivamente a escolha realizada para o cargo atual
 
-**Pré-condição:** deve existir uma escolha que possa ser confirmada, seja um candidato identificado ou a opção de voto em branco
+**Pré-condição:** 
+° A sessão geral está em andamento
 
-**Fluxo principal:**
+° Existe uma escolha válida para confirmação, seja um candidato identificado ou a opção de voto em branco
+
+**Fluxo principal:** 
 1. O eleitor confere a escolha apresentada na tela
-2. O eleitor pressiona o botão Confirma
+2. O eleitor confere a escolha apresentada na tela
 3. O sistema valida a escolha
 4. O sistema registra o voto
 5. O sistema impede que o eleitor altere o voto confirmado
 
-**Fluxo alternativo**
+**Fluxo alternativo:**
 
-° Se a escolha não atender às condições de confirmação, o sistema apresenta uma mensagem apropriada e não registra o voto como confirmado
+° **Escolha inválida ou incompleta:** o sistema apresenta uma mensagem informativa e não registra o voto como confirmado
 
-**Pós-condição:** o voto foi registrado e não pode ser alterado pelo eleitor
+**Pós-condição:** o voto do cargo atual foi registrado definitivamente e não pode ser alterado pelo eleitor
 
 ---
 
-**UC07** — Avançar para o próximo cargo
+**UC06** — Avançar para o próximo cargo
 
 **Ator principal:** Eleitor
 
 **Objetivo:** permitir a continuidade da votação após a confirmação do voto para Deputado Federal
 
-**Pré-condição:** o voto para Deputado Federal deve ter sido confirmado
+**Pré-condições:** 
+° A sessão geral está em andamento
+
+° O voto para Deputado Federal foi confirmado
 
 **Fluxo principal:**
-1. O sistema conclui o registro do primeiro voto
+1. O sistema conclui o registro do voto para Deputado Federal
 2. O sistema apresenta a tela de votação para Presidente
-3. O eleitor pode iniciar a escolha para o segundo cargo
+3. O eleitor inicia a escolha para o segundo cargo
 
-**Pós-condição:** a votação está na etapa de escolha para Presidente.
+**Pós-condição:** o eleitor está na etapa de votação para Presidente
 
 ---
 
-**UC08** — Encerrar votação
+**UC07** — Encerrar votação
 
-**Ator principal:** Eleitor
+**Ator principal:** Mesário
 
-**Objetivo:** finalizar a sessão após a conclusão das escolhas previstas
+**Objetivo:** encerrar a sessão geral de votação e liberar a consulta aos resultados finais
 
-**Pré-condição:** o eleitor deve estar na etapa de votação para Presidente
+**Pré-condições:** 
+° A sessão geral está em andamento
+
+° O mesário possui autorização para acessar a área administrativa
 
 **Fluxo principal:**
-1. O eleitor escolhe e confere sua opção para Presidente
-2. O eleitor pressiona Confirma
-3. O sistema valida e registra o voto
-4. O sistema finaliza a sessão de votação
-5. O sistema informa que a votação foi concluída
+1. O mesário acessa a área administrativa
+2. O sistema solicita autenticação por senha
+3. O mesário informa a senha
+4. O sistema valida a senha e permite o acesso autorizado
+5. O mesário solicita o encerramento da sessão geral
+6. O sistema altera o estado da sessão para encerrada
+7. O sistema impede o registro de novos votos
+8. O sistema libera a consulta aos resultados finais para o mesário autorizado
 
-**Pós-condição:** a sessão de votação foi encerrada e os votos confirmados foram registrados conforme as regras do sistema
+**Fluxos alternativos:**
+
+° **Senha inválida:** o sistema não permite o acesso administrativo nem o encerramento da sessão
+
+° **Sessão já encerrada:** o sistema informa que a votação já foi finalizada
+
+**Pós-condição:** a sessão geral está encerrada, não aceita novos votos e permite a consulta autorizada à apuração final
 
 ---
+
+**UC08** — Autenticar mesário
+
+**Ator principal:** Mesário
+
+**Objetivo:** validar a senha para permitir o acesso à área administrativa
+
+**Pré-condição:** o mesário está na tela de acesso administrativo
+
+**Fluxo principal:**
+1. O sistema solicita a senha
+2. O mesário informa a senha
+3. O sistema verifica se a senha é válida
+4. O sistema libera o acesso administrativo autorizado
+
+**Fluxo alternativo:**
+
+° **Senha inválida:** o sistema informa que a senha está incorreta e não permite o acesso administrativo
+
+**Pós-condição:** o mesário autenticado pode acessar as funcionalidades administrativas permitidas para o estado atual da sessão
+
+---
+
+**UC09** — Consultar resultados da votação
+
+**Ator principal:** Mesário
+
+**Objetivo:** consultar a quantidade de votos e os percentuais dos candidatos conforme o estado da sessão
+
+**Pré-condições:** 
+
+° O mesário está autenticado
+
+° A consulta está autorizada para o estado atual da sessão
+
+**Fluxo principal:**
+1. O mesário acessa a área de resultados
+2. O sistema verifica o estado da sessão
+3. Se a sessão ainda não foi iniciada, o sistema apresenta os resultados iniciais para verificação
+4. Se a sessão foi encerrada, o sistema apresenta a apuração final
+5. O sistema exibe a quantidade de votos e os percentuais calculados a partir dos dados registrados
+
+**Fluxos alternativos:**
+
+° **Sessão em andamento:** o sistema não disponibiliza os resultados aos eleitores nem a usuários não autorizados
+
+° **Acesso não autorizado:** o sistema impede a consulta
+
+° **Nenhum voto registrado:** o sistema apresenta zero votos e zero por cento, sem realizar divisão por zero
+
+**Pós-condição:** os resultados autorizados são apresentados ao mesário
+
 
 ## 5. Relação com os requisitos:
 
@@ -230,7 +282,9 @@ Os casos de uso deste documento complementam os requisitos registrados em **requ
 ---
 
 ## 6. Histórico de alterações:
-Versão 1.0: criação inicial da documentação de casos de uso da Urna Cidadã.
+Versão 1.0: criação inicial da documentação de casos de uso da Urna Cidadã
+
+Versão 1.1: atualização dos casos de uso para incluir autenticação do mesário, verificação inicial dos resultados, consulta à apuração e encerramento da sessão geral
 
 ---
 
