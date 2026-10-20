@@ -1,0 +1,160 @@
+classDiagram
+    direction TB
+    class Partido {
+        <<implementado>>
+        -String nome
+        -String sigla
+        +Partido(String nome, String sigla)
+        +getNome() String
+        +getSigla() String
+        +toString() String
+    }
+    class Cargo {
+        <<implementado>>
+        -String nome
+        -int quantidadeDigitos
+        -List~Candidato~ candidatos
+        +Cargo(String nome, int quantidadeDigitos)
+        +getNome() String
+        +getQuantidadeDigitos() int
+        +getCandidatos() List~Candidato~
+        +adicionarCandidato(Candidato candidato) void
+        +buscarCandidato(String numero) Optional~Candidato~
+        +validarNumero(String numero) boolean
+    }
+    class Candidato {
+        <<implementado>>
+        -String nome
+        -String numero
+        -Partido partido
+        -Cargo cargo
+        +Candidato(String nome, String numero, Partido partido, Cargo cargo)
+        +getNome() String
+        +getNumero() String
+        +getPartido() Partido
+        +getCargo() Cargo
+    }
+    class Voto {
+        <<implementado>>
+        -String id
+        -TipoVoto tipo
+        -Cargo cargo
+        -Candidato candidato
+        -boolean confirmado
+        +Voto(String id, TipoVoto tipo, Cargo cargo, Candidato candidato, boolean confirmado)
+        +getId() String
+        +getTipo() TipoVoto
+        +getCargo() Cargo
+        +getCandidato() Candidato
+        +isConfirmado() boolean
+    }
+    class Usuario {
+        <<abstrata_implementada>>
+        -String id
+        -String nome
+        #Usuario(String id, String nome)
+        +getId() String
+        +getNome() String
+        +getPapel() String*
+    }
+    class Eleitor {
+        <<implementado>>
+        +Eleitor(String id, String nome)
+        +getPapel() String
+    }
+    class Mesario {
+        <<implementado>>
+        +Mesario(String id, String nome)
+        +getPapel() String
+    }
+    class RepositorioVotos {
+        <<interface_declarada>>
+        +salvar(Voto voto) void
+        +listar() List~Voto~
+    }
+    class TipoVoto {
+        <<enumeration>>
+        CANDIDATO
+        BRANCO
+        NULO
+    }
+    class EstadoSessao {
+        <<enumeration>>
+        NAO_INICIADA
+        EM_ANDAMENTO
+        ENCERRADA
+    }
+    class UrnaCidada {
+        <<futuro>>
+        +iniciarVotacao() VotacaoEleitor
+        +processarEntrada(String numero) void
+        +corrigirEscolha() void
+        +selecionarBranco() void
+        +confirmarVoto() void
+        +avancarEtapa() void
+    }
+    class SessaoVotacao {
+        <<futuro>>
+        -EstadoSessao estado
+        +iniciar() void
+        +encerrar() void
+    }
+    class VotacaoEleitor {
+        <<futuro>>
+        -Cargo etapaAtual
+        +getCargoAtual() Optional~Cargo~
+        +encerrar() void
+    }
+    class Autenticacao {
+        <<futuro>>
+        +validarSenha(String senha) boolean
+    }
+    class Apuracao {
+        <<futuro>>
+        +calcular(List~Voto~ votos) ResultadoApuracao
+        +percentual(int votos, int total) double
+    }
+    class ResultadoApuracao {
+        <<futuro>>
+        -int totalVotos
+        -Map votosPorCandidato
+        -Map percentuais
+    }
+    Partido "1" <-- "0..*" Candidato : pertence
+    Cargo "1" <--> "0..*" Candidato : cargo / candidatos
+    Cargo "1" <-- "0..*" Voto : corresponde
+    Candidato "0..1" <-- "0..*" Voto : escolha nominal
+    Voto --> TipoVoto
+    Usuario <|-- Eleitor
+    Usuario <|-- Mesario
+    RepositorioVotos ..> Voto : contrato sem adaptador
+    UrnaCidada --> "1" SessaoVotacao
+    UrnaCidada ..> VotacaoEleitor
+    UrnaCidada ..> RepositorioVotos
+    UrnaCidada ..> Autenticacao
+    SessaoVotacao --> EstadoSessao
+    SessaoVotacao "1" --> "0..*" VotacaoEleitor : participacoes sem identidade
+    VotacaoEleitor --> "0..1" Cargo : etapa atual
+    VotacaoEleitor ..> Voto : escolhas sem identidade do aluno
+    Apuracao ..> RepositorioVotos
+    Apuracao ..> ResultadoApuracao
+    Mesario ..> Autenticacao : acesso futuro via servico
+    note for Voto "Sem confirmar ou persistir. Candidato null somente em BRANCO. NULO reservado."
+    note for RepositorioVotos "Declaracao Java existente. Sem implementacao. Detalhes operacionais propostos."
+    note for SessaoVotacao "FUTURO: eleicao geral. Termino individual nao encerra a eleicao."
+    note for Usuario "Sem autenticacao, senha ou associacao com Voto."
+    note for EstadoSessao "Enum implementado; transicoes futuras."
+    style Partido fill:#e5f4eb,stroke:#287447
+    style Cargo fill:#e5f4eb,stroke:#287447
+    style Candidato fill:#e5f4eb,stroke:#287447
+    style Voto fill:#e5f4eb,stroke:#287447
+    style Usuario fill:#e5f4eb,stroke:#287447
+    style Eleitor fill:#e5f4eb,stroke:#287447
+    style Mesario fill:#e5f4eb,stroke:#287447
+    style RepositorioVotos fill:#e8efff,stroke:#355d9e
+    style UrnaCidada fill:#fff2db,stroke:#997029,stroke-dasharray:5 5
+    style SessaoVotacao fill:#fff2db,stroke:#997029,stroke-dasharray:5 5
+    style VotacaoEleitor fill:#fff2db,stroke:#997029,stroke-dasharray:5 5
+    style Autenticacao fill:#fff2db,stroke:#997029,stroke-dasharray:5 5
+    style Apuracao fill:#fff2db,stroke:#997029,stroke-dasharray:5 5
+    style ResultadoApuracao fill:#fff2db,stroke:#997029,stroke-dasharray:5 5

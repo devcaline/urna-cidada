@@ -1,0 +1,12 @@
+br\edu\unijorge\urnacidada\dominio\modelo\Mesario.class
+br\edu\unijorge\urnacidada\dominio\modelo\Cargo.class
+br\edu\unijorge\urnacidada\dominio\enums\TipoVoto.class
+br\edu\unijorge\urnacidada\Main.class
+br\edu\unijorge\urnacidada\dominio\modelo\Usuario.class
+br\edu\unijorge\urnacidada\dominio\modelo\Validacao.class
+br\edu\unijorge\urnacidada\dominio\modelo\Voto.class
+br\edu\unijorge\urnacidada\dominio\modelo\Partido.class
+br\edu\unijorge\urnacidada\repositorio\RepositorioVotos.class
+br\edu\unijorge\urnacidada\dominio\enums\EstadoSessao.class
+br\edu\unijorge\urnacidada\dominio\modelo\Candidato.class
+br\edu\unijorge\urnacidada\dominio\modelo\Eleitor.class
