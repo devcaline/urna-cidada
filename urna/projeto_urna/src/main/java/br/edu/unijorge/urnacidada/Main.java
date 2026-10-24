@@ -1,8 +1,12 @@
 package br.edu.unijorge.urnacidada;
 
+import br.edu.unijorge.urnacidada.dados.CatalogoCandidatos;
 import br.edu.unijorge.urnacidada.dominio.modelo.Candidato;
 import br.edu.unijorge.urnacidada.dominio.modelo.Cargo;
 import br.edu.unijorge.urnacidada.dominio.modelo.Partido;
+
+import br.edu.unijorge.urnacidada.dados.CatalogoCandidatos;
+import java.util.List;
 
 /** Exemplo de objetos, sem executar o processo de votação. */
 public final class Main {
@@ -17,5 +21,16 @@ public final class Main {
         cargo.buscarCandidato("0012").ifPresent(encontrado ->
                 System.out.printf("%s | %s | %s | %s%n", cargo.getNome(), encontrado.getNumero(),
                         encontrado.getNome(), encontrado.getPartido()));
+
+        //Teste de candidatos
+        //List<Cargo> cargos = CatalogoCandidatos.criarCargos();
+
+        //for(Cargo c : cargos){
+        //System.out.println("== "+ c.getNome() + " ==");
+
+        //for(Candidato candidatos : c.getCandidatos()){
+        //System.out.println(candidatos.getNumero() + " - " + candidatos.getNome() + " (" + candidatos.getPartido().getSigla() + ")");
+        //}
+        //}
     }
 }
