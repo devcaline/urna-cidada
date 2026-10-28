@@ -1,3 +1,6 @@
+import br.edu.unijorge.urnacidada.dados.CatalogoCandidatos;
+import br.edu.unijorge.urnacidada.servico.VotacaoEleitor;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -7,6 +10,8 @@ import java.io.File;
 import java.io.IOException;
 
 public class Main {
+
+
 
     public static void adicionar_numero(JLabel texto, String número) {
         int idc = 0;
@@ -18,13 +23,34 @@ public class Main {
 
     }
 
+    public static String formatarVisor(String numero, int digitos){
+        String visor = "";
+        for( int i=0; i < digitos; i++){
+            if(i<numero.length()){
+                visor += numero.charAt(i);
+            }else{
+                visor += "_";
+            }
+
+            visor += " ";
+        }
+        return visor;
+    }
+
+
     public static void abrirUrna() throws IOException {
+        VotacaoEleitor votacao = new VotacaoEleitor(CatalogoCandidatos.criarCargos());
+
         JFrame janela = new JFrame("Urna Eletrônica");
         janela.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        JLabel voto = new JLabel("_ _");
+        JLabel voto = new JLabel(formatarVisor(votacao.getNumeroDigitado(), votacao.getCargoAtual().getQuantidadeDigitos()));
         voto.setBounds(200, 50, 200, 40);
         voto.setFont(new Font("Arial", Font.BOLD, 45));
+
+        JLabel cargo = new JLabel(votacao.getCargoAtual().getNome());
+        cargo.setBounds(200, 15, 400, 30);
+        cargo.setFont(new Font("Arial",Font.BOLD, 22));
 
         Image sem_foto = ImageIO.read(new File("assents/sem_foto.jpg"));
         Image sem_foto_editada = sem_foto.getScaledInstance(230, 300, Image.SCALE_SMOOTH);
@@ -40,8 +66,8 @@ public class Main {
         n1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("1");
-                adicionar_numero(voto, "1");
+                votacao.digitar("1");
+                voto.setText(votacao.getNumeroDigitado());
             }
         });
 
@@ -52,8 +78,8 @@ public class Main {
         n2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("2");
-                adicionar_numero(voto, "2");
+                votacao.digitar("2");
+                voto.setText(votacao.getNumeroDigitado());
             }
         });
 
@@ -64,8 +90,8 @@ public class Main {
         n3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("3");
-                adicionar_numero(voto, "3");
+                votacao.digitar("3");
+                voto.setText(votacao.getNumeroDigitado());
             }
         });
 
@@ -76,8 +102,8 @@ public class Main {
         n4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("4");
-                adicionar_numero(voto, "4");
+                votacao.digitar("4");
+                voto.setText(votacao.getNumeroDigitado());
             }
         });
 
@@ -88,8 +114,8 @@ public class Main {
         n5.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("5");
-                adicionar_numero(voto, "5");
+                votacao.digitar("5");
+                voto.setText(votacao.getNumeroDigitado());
             }
         });
 
@@ -100,8 +126,8 @@ public class Main {
         n6.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("6");
-                adicionar_numero(voto, "6");
+                votacao.digitar("6");
+                voto.setText(votacao.getNumeroDigitado());
             }
         });
 
@@ -112,8 +138,8 @@ public class Main {
         n7.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("7");
-                adicionar_numero(voto, "7");
+                votacao.digitar("7");
+                voto.setText(votacao.getNumeroDigitado());
             }
         });
 
@@ -124,8 +150,8 @@ public class Main {
         n8.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("8");
-                adicionar_numero(voto, "8");
+                votacao.digitar("8");
+                voto.setText(votacao.getNumeroDigitado());
             }
         });
 
@@ -148,8 +174,8 @@ public class Main {
         n0.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("0");
-                adicionar_numero(voto, "0");
+                votacao.digitar("0");
+                voto.setText(votacao.getNumeroDigitado());
             }
         });
 
@@ -200,6 +226,7 @@ public class Main {
         janela.add(corrige);
         janela.add(foto);
         janela.add(voto);
+        janela.add(cargo);
 
         janela.setLayout(null);
         janela.setBounds(400, 200, 1000, 550);

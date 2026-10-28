@@ -6,6 +6,8 @@ import br.edu.unijorge.urnacidada.dominio.modelo.Cargo;
 import br.edu.unijorge.urnacidada.dominio.modelo.Partido;
 
 import br.edu.unijorge.urnacidada.dados.CatalogoCandidatos;
+import br.edu.unijorge.urnacidada.servico.VotacaoEleitor;
+
 import java.util.List;
 
 /** Exemplo de objetos, sem executar o processo de votação. */
@@ -32,5 +34,17 @@ public final class Main {
         //System.out.println(candidatos.getNumero() + " - " + candidatos.getNome() + " (" + candidatos.getPartido().getSigla() + ")");
         //}
         //}
+
+        VotacaoEleitor votacao = new VotacaoEleitor(CatalogoCandidatos.criarCargos());
+
+        System.out.println("Cargo: " + votacao.getCargoAtual().getNome());
+
+        votacao.digitar("1");
+        votacao.digitar("1");
+        votacao.digitar("1");
+        votacao.digitar("1");
+        votacao.digitar("1");
+
+        System.out.println("Visor: " + votacao.getNumeroDigitado());
     }
 }
