@@ -18,8 +18,8 @@ public class CatalogoCandidatos {
         Cargo deputado = new Cargo("Deputado Federal",4);
 
         Candidato vivicaxi = new Candidato("Vivicaxi","1234",Acao,deputado);
-        Candidato uvalina = new Candidato("Uvalina","4321",CompromissoNacional,deputado);
-        Candidato goiabete = new Candidato("Goiabete","6789",Igualdade,deputado);
+        Candidato uvalina = new Candidato("Uvalina","7777",CompromissoNacional,deputado);
+        Candidato goiabete = new Candidato("Goiabete","4321",Igualdade,deputado);
 
         deputado.adicionarCandidato(vivicaxi);
         deputado.adicionarCandidato(uvalina);
@@ -28,9 +28,9 @@ public class CatalogoCandidatos {
         //======= PRESIDENTE =======
         Cargo presidente = new Cargo("Presidente",2);
 
-        Candidato moranguete = new Candidato("Moranguete","10",Igualdade,presidente);
+        Candidato moranguete = new Candidato("Moranguete","43",Igualdade,presidente);
         Candidato abacatudo = new Candidato("Abacatudo","77",CompromissoNacional,presidente);
-        Candidato bananildo = new Candidato("Bananildo","23",Acao,presidente);
+        Candidato bananildo = new Candidato("Bananildo","12",Acao,presidente);
 
         presidente.adicionarCandidato(moranguete);
         presidente.adicionarCandidato(abacatudo);

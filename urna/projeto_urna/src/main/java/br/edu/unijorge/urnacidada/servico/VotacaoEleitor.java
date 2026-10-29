@@ -1,8 +1,10 @@
 package br.edu.unijorge.urnacidada.servico;
 
+import br.edu.unijorge.urnacidada.dominio.modelo.Candidato;
 import br.edu.unijorge.urnacidada.dominio.modelo.Cargo;
 
 import java.util.List;
+import java.util.Optional;
 
 public class VotacaoEleitor {
     private List<Cargo> cargos;
@@ -53,16 +55,55 @@ public class VotacaoEleitor {
             return;
         }
 
-        isNumeroCompleto();
+        if(isNumeroCompleto()){
+            return;
+        }
 
         numeroDigitado += digito;
 
     }
 
-    public void isNumeroCompleto(){
-        if(numeroDigitado.length() >= getCargoAtual().getQuantidadeDigitos()){
+    public boolean isNumeroCompleto(){
+        return numeroDigitado.length() >= getCargoAtual().getQuantidadeDigitos();
+    }
+
+    public Optional<Candidato> getCandidatoEncontrado(){
+        return  getCargoAtual().buscarCandidato(getNumeroDigitado());
+    }
+
+    public void corrigir(){
+        numeroDigitado = "";
+        branco = false;
+    }
+
+    public void votarBranco(){
+        if(isEncerrada()){
             return;
         }
+
+        if(getNumeroDigitado().length() > 0){
+            return;
+        }
+
+        branco = true;
+    }
+
+    public boolean confirmar(){
+        if(isEncerrada()){
+            return false;
+        }
+
+        boolean escolhaValida = branco || getCandidatoEncontrado().isPresent();
+
+        if(!escolhaValida){
+            return false;
+        }
+
+
+        etapaAtual++;
+        corrigir();
+
+        return true;
     }
 
 }

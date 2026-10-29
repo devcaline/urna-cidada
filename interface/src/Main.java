@@ -1,6 +1,8 @@
 import br.edu.unijorge.urnacidada.dados.CatalogoCandidatos;
+import br.edu.unijorge.urnacidada.dominio.modelo.Candidato;
 import br.edu.unijorge.urnacidada.servico.VotacaoEleitor;
-
+import br.edu.unijorge.urnacidada.dominio.modelo.Candidato;
+import java.util.Optional;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -8,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 
 public class Main {
 
@@ -37,6 +40,36 @@ public class Main {
         return visor;
     }
 
+    public static void atualizarTela(VotacaoEleitor votacao, JLabel voto, JLabel nome, JLabel partido){
+        if(votacao.isEncerrada()){
+            return;
+        }
+
+        voto.setText(formatarVisor(votacao.getNumeroDigitado(),
+                votacao.getCargoAtual().getQuantidadeDigitos()));
+
+        if(votacao.isBranco()){
+            voto.setText("VOTO EM BRANCO");
+            nome.setText("");
+            partido.setText("");
+            return;
+        }
+
+        if(votacao.isNumeroCompleto()){
+            Optional<Candidato> encontrado = votacao.getCandidatoEncontrado();
+
+            if(encontrado.isPresent()){
+                nome.setText((encontrado.get().getNome()));
+                partido.setText(encontrado.get().getPartido().getSigla());
+            }else{
+                nome.setText("CANDIDATO NÃO ENCONTRADO");
+                partido.setText("");
+            }
+        }else{
+            nome.setText("");
+            partido.setText("");
+        }
+    }
 
     public static void abrirUrna() throws IOException {
         VotacaoEleitor votacao = new VotacaoEleitor(CatalogoCandidatos.criarCargos());
@@ -45,12 +78,20 @@ public class Main {
         janela.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         JLabel voto = new JLabel(formatarVisor(votacao.getNumeroDigitado(), votacao.getCargoAtual().getQuantidadeDigitos()));
-        voto.setBounds(200, 50, 200, 40);
+        voto.setBounds(200, 50, 450, 40);
         voto.setFont(new Font("Arial", Font.BOLD, 45));
 
         JLabel cargo = new JLabel(votacao.getCargoAtual().getNome());
         cargo.setBounds(200, 15, 400, 30);
         cargo.setFont(new Font("Arial",Font.BOLD, 22));
+
+        JLabel nome = new JLabel("");
+        nome.setBounds(420, 200, 300, 30);
+        nome.setFont(new Font("Arial", Font.BOLD, 22));
+        JLabel partido = new JLabel("");
+        partido.setBounds(420,240, 300, 30);
+        partido.setFont(new Font("Arial", Font.PLAIN, 18));
+
 
         Image sem_foto = ImageIO.read(new File("assents/sem_foto.jpg"));
         Image sem_foto_editada = sem_foto.getScaledInstance(230, 300, Image.SCALE_SMOOTH);
@@ -67,7 +108,7 @@ public class Main {
             @Override
             public void actionPerformed(ActionEvent e) {
                 votacao.digitar("1");
-                voto.setText(votacao.getNumeroDigitado());
+                atualizarTela(votacao, voto, nome, partido);
             }
         });
 
@@ -79,7 +120,7 @@ public class Main {
             @Override
             public void actionPerformed(ActionEvent e) {
                 votacao.digitar("2");
-                voto.setText(votacao.getNumeroDigitado());
+                atualizarTela(votacao, voto, nome, partido);
             }
         });
 
@@ -91,7 +132,7 @@ public class Main {
             @Override
             public void actionPerformed(ActionEvent e) {
                 votacao.digitar("3");
-                voto.setText(votacao.getNumeroDigitado());
+                atualizarTela(votacao, voto, nome, partido);
             }
         });
 
@@ -103,7 +144,7 @@ public class Main {
             @Override
             public void actionPerformed(ActionEvent e) {
                 votacao.digitar("4");
-                voto.setText(votacao.getNumeroDigitado());
+                atualizarTela(votacao, voto, nome, partido);
             }
         });
 
@@ -115,7 +156,7 @@ public class Main {
             @Override
             public void actionPerformed(ActionEvent e) {
                 votacao.digitar("5");
-                voto.setText(votacao.getNumeroDigitado());
+                atualizarTela(votacao, voto, nome, partido);
             }
         });
 
@@ -127,7 +168,7 @@ public class Main {
             @Override
             public void actionPerformed(ActionEvent e) {
                 votacao.digitar("6");
-                voto.setText(votacao.getNumeroDigitado());
+                atualizarTela(votacao, voto, nome, partido);
             }
         });
 
@@ -139,7 +180,7 @@ public class Main {
             @Override
             public void actionPerformed(ActionEvent e) {
                 votacao.digitar("7");
-                voto.setText(votacao.getNumeroDigitado());
+                atualizarTela(votacao, voto, nome, partido);
             }
         });
 
@@ -151,7 +192,7 @@ public class Main {
             @Override
             public void actionPerformed(ActionEvent e) {
                 votacao.digitar("8");
-                voto.setText(votacao.getNumeroDigitado());
+                atualizarTela(votacao, voto, nome, partido);
             }
         });
 
@@ -162,8 +203,8 @@ public class Main {
         n9.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("9");
-                adicionar_numero(voto, "9");
+                votacao.digitar("9");
+                atualizarTela(votacao, voto, nome, partido);
             }
         });
 
@@ -175,7 +216,7 @@ public class Main {
             @Override
             public void actionPerformed(ActionEvent e) {
                 votacao.digitar("0");
-                voto.setText(votacao.getNumeroDigitado());
+                atualizarTela(votacao, voto, nome, partido);
             }
         });
 
@@ -184,14 +225,32 @@ public class Main {
         confirma.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (voto.getText().equals("_ _")){
-                    JOptionPane.showMessageDialog(janela, "Voto inválido!");
-                }else{
-                    System.out.println("Voto confirmado!");
-                    voto.setText("FIM");
+                boolean confirmou = votacao.confirmar();
+
+                // 1. não confirmou: avisa o motivo
+                if(!confirmou){
+                    if(!votacao.isNumeroCompleto()){
+                        JOptionPane.showMessageDialog(janela, "NÚMERO INCOMPLETO");
+                    }else{
+                        JOptionPane.showMessageDialog(janela, "CANDIDATO NÃO ENCONTRADO");
+                    }
+                    return;
                 }
 
+                // 2. confirmou o último cargo: FIM
+                if(votacao.isEncerrada()){
+                    voto.setText("FIM");
+                    cargo.setText("");
+                    nome.setText("");
+                    partido.setText("");
+                    return;
                 }
+
+                // 3. confirmou e ainda tem cargo: mostra o próximo
+                    cargo.setText(votacao.getCargoAtual().getNome());
+                    atualizarTela(votacao, voto, nome, partido);
+                    }
+
         });
         confirma.setBackground(Color.GREEN);
 
@@ -201,14 +260,21 @@ public class Main {
         corrige.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Voto corrigido!");
-                voto.setText("_ _");
+                votacao.corrigir();
+                atualizarTela(votacao, voto, nome, partido);
             }
         });
 
         JButton branco = new JButton("BRANCO");
         branco.setBounds(650, 405, 100, 35);
         branco.setBackground(Color.WHITE);
+        branco.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                votacao.votarBranco();
+                atualizarTela(votacao, voto, nome, partido);
+            }
+        });
 
         // Adicionando elementos na janela
         janela.add(n1);
@@ -227,6 +293,9 @@ public class Main {
         janela.add(foto);
         janela.add(voto);
         janela.add(cargo);
+        janela.add(partido);
+        janela.add(nome);
+
 
         janela.setLayout(null);
         janela.setBounds(400, 200, 1000, 550);
