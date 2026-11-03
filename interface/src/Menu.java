@@ -33,8 +33,7 @@ public class Menu {
         btnVotantes.setForeground(Color.WHITE);
         btnVotantes.setFont(new Font("Arial", Font.PLAIN, 14));
         btnVotantes.addActionListener(e -> {
-            // TODO: abrir interface de Cadastro de Votantes
-            JOptionPane.showMessageDialog(janela, "Tela de Cadastro de Votantes (em desenvolvimento)");
+            CadastroVotantes.abrirCadastroVotantes();
         });
 
         // Botão: Relatório
@@ -68,7 +67,7 @@ public class Menu {
         btnUrna.addActionListener(e -> {
             janela.setVisible(false);
             try {
-                Main.abrirUrna();
+                Urna.abrirUrna();
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
