@@ -357,6 +357,10 @@ public class Urna {
 
         confirma.addActionListener(e -> {
 
+            Cargo cargoVotado = votacao.getCargoAtual();
+            boolean eraBranco = votacao.isBranco();
+            Optional<Candidato> candidatoVotado = votacao.getCandidatoEncontrado();
+
             boolean confirmou = votacao.confirmar();
 
             // 1. não confirmou: avisa o motivo
@@ -369,12 +373,16 @@ public class Urna {
                 return;
             }
 
+            // Registra o voto contabilizado
+            if (eraBranco) {
+                ContagemVotos.registrarVotoBranco(cargoVotado);
+            } else if (candidatoVotado.isPresent()) {
+                ContagemVotos.registrarVotoCandidato(candidatoVotado.get());
+            }
+
             // 2. confirmou o último cargo: FIM
             if(votacao.isEncerrada()){
-                voto.setText("FIM");
-                cargo.setText("");
-                nome.setText("");
-                partido.setText("");
+                // Toca o áudio de confirmação
                 try {
                     Clip clip = AudioSystem.getClip();
                     clip.open(AudioSystem.getAudioInputStream(new File("assents/confirma-urna.wav")));
@@ -383,18 +391,49 @@ public class Urna {
                     ex.printStackTrace();
                 }
 
-                janela.setVisible(false);
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }
-                try {
-                    Menu.main(null);;
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+                // Monta a tela de FIM no painel principal
+                main.removeAll();
+                main.setBackground(Color.WHITE);
+
+                JLabel lblFim = new JLabel("FIM", SwingConstants.CENTER);
+                lblFim.setFont(new Font("Arial", Font.BOLD, 120));
+                lblFim.setForeground(new Color(12, 12, 18));
+                lblFim.setBounds(0, 40, NUMPAD_X, 150);
+
+                JPanel linhaVerde = new JPanel();
+                linhaVerde.setBackground(new Color(0, 150, 0));
+                linhaVerde.setBounds(80, 200, NUMPAD_X - 160, 4);
+
+                JLabel lblMsg = new JLabel("<html><center>SEU VOTO FOI CONFIRMADO!<br>OBRIGADO POR VOTAR.</center></html>", SwingConstants.CENTER);
+                lblMsg.setFont(new Font("Arial", Font.BOLD, 18));
+                lblMsg.setForeground(new Color(50, 50, 55));
+                lblMsg.setBounds(0, 215, NUMPAD_X, 60);
+
+                LocalDateTime agora = LocalDateTime.now();
+                JLabel lblHoraFim = new JLabel(agora.format(DateTimeFormatter.ofPattern("dd/MM/yyyy  HH:mm:ss")), SwingConstants.CENTER);
+                lblHoraFim.setFont(new Font("Arial", Font.PLAIN, 13));
+                lblHoraFim.setForeground(new Color(120, 120, 125));
+                lblHoraFim.setBounds(0, 290, NUMPAD_X, 20);
+
+                main.add(lblFim);
+                main.add(linhaVerde);
+                main.add(lblMsg);
+                main.add(lblHoraFim);
+                main.repaint();
+                main.revalidate();
+
+                // Após 4 segundos, volta ao menu
+                Timer timer = new Timer(4000, evt -> {
+                    janela.dispose();
+                    try {
+                        Menu.main();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
+                timer.setRepeats(false);
+                timer.start();
+
                 return;
             }
 
