@@ -4,8 +4,6 @@ import br.edu.unijorge.urnacidada.dados.CatalogoCandidatos;
 import br.edu.unijorge.urnacidada.dominio.modelo.Candidato;
 import br.edu.unijorge.urnacidada.dominio.modelo.Cargo;
 import br.edu.unijorge.urnacidada.dominio.modelo.Partido;
-
-import br.edu.unijorge.urnacidada.dados.CatalogoCandidatos;
 import br.edu.unijorge.urnacidada.servico.VotacaoEleitor;
 
 import java.util.List;

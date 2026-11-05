@@ -2,6 +2,9 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
+import br.edu.unijorge.urnacidada.dados.CatalogoCandidatos;
+import br.edu.unijorge.urnacidada.dominio.modelo.Candidato;
+import br.edu.unijorge.urnacidada.dominio.modelo.Cargo;
 
 public class ExibicaoCandidatos {
 

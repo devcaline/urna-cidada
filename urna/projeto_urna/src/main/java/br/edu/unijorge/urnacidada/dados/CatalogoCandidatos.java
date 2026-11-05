@@ -5,6 +5,7 @@ import br.edu.unijorge.urnacidada.dominio.modelo.Partido;
 
 import java.util.List;
 
+
 public class CatalogoCandidatos {
 
     public static List<Cargo>
@@ -28,9 +29,9 @@ public class CatalogoCandidatos {
         //======= PRESIDENTE =======
         Cargo presidente = new Cargo("Presidente",2);
 
-        Candidato moranguete = new Candidato("Moranguete","43",Igualdade,presidente, "assents/moranguete.jpeg");
-        Candidato abacatudo = new Candidato("Abacatudo","77",CompromissoNacional,presidente, "assents/abacatudo.jpeg");
-        Candidato bananildo = new Candidato("Bananildo","12",Acao,presidente, "assents/bananildo.jpeg");
+        Candidato moranguete = new Candidato("Moranguete","43",Igualdade,presidente, "assents/moranguete.jpeg", "Zé Noura");
+        Candidato abacatudo = new Candidato("Abacatudo","77",CompromissoNacional,presidente, "assents/abacatudo.jpeg", "Perita");
+        Candidato bananildo = new Candidato("Bananildo","12",Acao,presidente, "assents/bananildo.jpeg", "Laranjilda");
 
         presidente.adicionarCandidato(moranguete);
         presidente.adicionarCandidato(abacatudo);

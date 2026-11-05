@@ -9,6 +9,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
+import br.edu.unijorge.urnacidada.dados.CatalogoCandidatos;
+import br.edu.unijorge.urnacidada.dominio.modelo.Candidato;
+import br.edu.unijorge.urnacidada.dominio.modelo.Cargo;
+import br.edu.unijorge.urnacidada.servico.VotacaoEleitor;
+
 public class Urna {
 
 
@@ -47,10 +52,11 @@ public class Urna {
         return visor;
     }
 
-    public static void atualizarTela(VotacaoEleitor votacao, JLabel voto, JLabel nome, JLabel partido, JLabel foto){
+    public static void atualizarTela(VotacaoEleitor votacao, JLabel voto, JLabel nome, JLabel partido, JLabel foto,JLabel vice){
         if(votacao.isEncerrada()){
             return;
         }
+        vice.setText("");
 
         voto.setText(formatarVisor(votacao.getNumeroDigitado(),
                 votacao.getCargoAtual().getQuantidadeDigitos()));
@@ -68,6 +74,9 @@ public class Urna {
             if(encontrado.isPresent()){
                 nome.setText((encontrado.get().getNome()));
                 partido.setText(encontrado.get().getPartido().getSigla());
+                if(encontrado.get().getVice() != null){                        // ← NOVO
+                    vice.setText("VICE: " + encontrado.get().getVice());
+                }
                 try{
                 Image img = ImageIO.read(new File(encontrado.get().getFoto_src()));
 
@@ -100,8 +109,8 @@ public class Urna {
                 }
             }
         }else{
-            nome.setText("CANDIDATO");
-            partido.setText("PARTIDO");
+            nome.setText("");
+            partido.setText("");
             try{
                 Image img = ImageIO.read(new File("assents/sem_foto.jpg"));
 
@@ -258,20 +267,28 @@ public class Urna {
         lblCandidatoTitulo.setFont(new Font("Arial", Font.PLAIN, 11));
         lblCandidatoTitulo.setForeground(new Color(90, 90, 95));
 
-        JLabel nome = new JLabel("FULANO DE TAL");
+        JLabel nome = new JLabel("");
         nome.setBounds(192, 208, 295, 28);
         nome.setFont(new Font("Arial", Font.BOLD, 18));
         nome.setForeground(new Color(10, 10, 15));
 
-        JLabel partido = new JLabel("PARTIDO XYZ");
+        JLabel partido = new JLabel("");
         partido.setBounds(192, 237, 250, 18);
         partido.setFont(new Font("Arial", Font.PLAIN, 12));
         partido.setForeground(new Color(90, 90, 95));
+
+        JLabel vice = new JLabel("");
+        vice.setBounds(192, 256, 250, 18);
+        vice.setFont(new Font("Arial", Font.PLAIN, 12));
+        vice.setForeground(new Color(90, 90, 95));
 
         main.add(lblSeuVoto);
         main.add(cargo);
         main.add(linhaSep);
         main.add(foto);
+        main.add(nome);
+        main.add(partido);
+        main.add(vice);
         main.add(lblNumeroTitulo);
         main.add(voto);
         main.add(lblCandidatoTitulo);
@@ -336,7 +353,7 @@ public class Urna {
         // ── Action listeners (lógica original preservada) ─────────────────
         ActionListener digitarNum = e -> {
             votacao.digitar(((JButton) e.getSource()).getText());
-            atualizarTela(votacao, voto, nome, partido, foto);
+            atualizarTela(votacao, voto, nome, partido, foto, vice);
         };
         n1.addActionListener(digitarNum);
         n2.addActionListener(digitarNum);
@@ -352,7 +369,7 @@ public class Urna {
         corrige.addActionListener(e -> {
 
             votacao.corrigir();
-            atualizarTela(votacao, voto, nome, partido, foto);
+            atualizarTela(votacao, voto, nome, partido, foto, vice);
         });
 
         confirma.addActionListener(e -> {
@@ -439,7 +456,7 @@ public class Urna {
 
             // 3. confirmou e ainda tem cargo: mostra o próximo
             cargo.setText(votacao.getCargoAtual().getNome());
-            atualizarTela(votacao, voto, nome, partido, foto);
+            atualizarTela(votacao, voto, nome, partido, foto, vice);
             try {
                     Clip clip = AudioSystem.getClip();
                     clip.open(AudioSystem.getAudioInputStream(new File("assents/ok.wav")));
@@ -452,7 +469,7 @@ public class Urna {
         branco.addActionListener(e -> {
             //voto.setText("BRANCO");
             votacao.votarBranco();
-            atualizarTela(votacao, voto, nome, partido, foto);
+            atualizarTela(votacao, voto, nome, partido, foto, vice);
         });
 
         numpad.add(n1); numpad.add(n2); numpad.add(n3);

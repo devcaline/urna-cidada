@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.edu.unijorge.urnacidada.dominio.modelo.Candidato;
+import br.edu.unijorge.urnacidada.dominio.modelo.Cargo;
+import br.edu.unijorge.urnacidada.dados.CatalogoCandidatos;
+
 public class ContagemVotos {
 
     // Armazena os votos por número do candidato
