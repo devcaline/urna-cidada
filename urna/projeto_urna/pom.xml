@@ -12,8 +12,15 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <junit.version>5.11.4</junit.version>
+    <firebase.version>9.9.0</firebase.version>
   </properties>
   <dependencies>
+    <!-- Firebase Admin SDK: conexão do app desktop com o Cloud Firestore. -->
+    <dependency>
+      <groupId>com.google.firebase</groupId>
+      <artifactId>firebase-admin</artifactId>
+      <version>${firebase.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
