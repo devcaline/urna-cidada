@@ -106,7 +106,7 @@ java -jar target/urna-cidada-0.1.0-SNAPSHOT.jar
 
 ### VS Code
 
-Abra a pasta que contém `pom.xml`, utilize o Extension Pack for Java e configure um JDK 17 ou superior em **Java: Configure Java Runtime**. Aguarde a importação Maven; use a visão Testing ou `mvn test` no terminal. `Main.java` pode ser executado pelo editor ou pelo JAR após `mvn clean verify`. Nenhuma credencial Firebase é necessária.
+Abra a pasta que contém `pom.xml`, utilize o Extension Pack for Java e configure um JDK 17 ou superior em **Java: Configure Java Runtime**. Aguarde a importação Maven; use a visão Testing ou `mvn test` no terminal. `Main.java` pode ser executado pelo editor ou pelo JAR após `mvn clean verify`. Os testes não precisam de credencial Firebase; já a urna (`Menu`) só abre com a chave do Firebase configurada, conforme [docs/banco-de-dados.md](../../docs/banco-de-dados.md).
 
 ### Código disponível
 
@@ -118,10 +118,10 @@ Cargo protege sua coleção e impede duplicações por número; Candidato refere
 
 - Lógica: fluxo individual, estados da sessão geral, confirmação, correção e coordenação de registro.
 - Interface: Swing, teclado, mensagens e apresentação.
-- Persistência: implementação de RepositorioVotos, esquema, IDs, idempotência e regras de acesso Firestore.
+- ~~Persistência: implementação de RepositorioVotos, esquema, IDs, idempotência e regras de acesso Firestore.~~ Feito: pacote `infraestrutura` e [docs/banco-de-dados.md](../../docs/banco-de-dados.md).
 - Administração e apuração: autenticação, autorização e resultados conforme os requisitos.
 
-Os pacotes `servico`, `interfacegrafica` e `infraestrutura` estão reservados na arquitetura, sem classes vazias ou implementação antecipada. Não há SDK Firebase, armazenamento em memória, autenticação, contagem, campanha ou sessão funcional. Os contratos operacionais ainda precisam de revisão da equipe.
+O pacote `infraestrutura` contém a conexão com o Firebase Cloud Firestore (Admin SDK) e a implementação de `RepositorioVotos`; `servico.Apuracao` faz a contagem. Ainda não há autenticação de mesário nem controle do estado da sessão.
 
 ### Documentação desta entrega
 

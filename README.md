@@ -77,6 +77,10 @@ Todas as entregas vão até **30/11/2026**.
 
 As credenciais do Firebase (arquivos de *service account* e `google-services.json`) **não devem ser enviadas para o repositório**. O `.gitignore` já bloqueia esses arquivos. Cada integrante guarda a sua cópia localmente.
 
+## 🗄️ Banco de dados
+
+Estrutura do Firestore, decisões de modelagem e passo a passo para conectar a urna ao Firebase: [docs/banco-de-dados.md](docs/banco-de-dados.md).
+
 ## 📚 Referências
 
 - [TSE — Simulador de votação](https://www.tse.jus.br/hotsites/simulador-de-votacao/)

@@ -1,0 +1,15 @@
+rules_version = '2';
+
+// Regras de acesso do Cloud Firestore da Urna Cidadã.
+//
+// O programa da urna (Java) usa o Firebase Admin SDK com a chave de conta de serviço,
+// que tem acesso total e NÃO passa por estas regras. Por isso, aqui bloqueamos todo o resto:
+// ninguém consegue ler os resultados nem gravar votos falsos por um navegador ou app
+// usando a chave pública do projeto (RN19, RN21, RN24).
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{documento=**} {
+      allow read, write: if false;
+    }
+  }
+}
