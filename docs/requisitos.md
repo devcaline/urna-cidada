@@ -84,7 +84,7 @@ As regras de negócio determinam como a votação deverá funcionar.
 
 **RN09 — Identificação do candidato:** quando houver correspondência com um candidato cadastrado, o sistema deverá exibir seu nome, número e partido.
 
-**RN10 — Candidato não encontrado:** quando o número digitado não corresponder a um candidato cadastrado, o sistema deverá informar que o candidato não foi encontrado, sem classificar automaticamente a escolha como voto nulo.
+**RN10 — Candidato não encontrado:** quando o número digitado estiver completo e não corresponder a nenhum candidato, o sistema deverá indicar “VOTO NULO”. Ao confirmar, o voto será registrado como nulo, como na urna do TSE. A simulação não contempla voto de legenda.
 
 **RN11 — Número incompleto:** quando o número digitado não possuir a quantidade de dígitos exigida para o cargo, o sistema deverá informar que a digitação está incompleta.
 
@@ -123,6 +123,8 @@ As regras de negócio determinam como a votação deverá funcionar.
 **RN28 — Separação entre campanha e votação:** a apresentação dos vídeos e a anotação dos números deverão ocorrer antes da abertura da sessão de votação pelos mesários.
 
 **RN29 — Caráter fictício da campanha:** os vídeos, nomes, partidos e propostas deverão ser elaborados para fins educativos e identificados como parte de uma simulação, sem representar candidaturas ou partidos políticos reais.
+
+RN30 — Branco com número digitado: o botão Branco só tem efeito com o visor vazio. Havendo número digitado, o eleitor deve usar Corrige antes, como na urna eletrônica do TSE.
 
 ## 5. Fluxo básico da votação:
 1. O eleitor inicia a sessão de votação.
@@ -169,7 +171,7 @@ Os itens abaixo ainda precisam ser discutidos e definidos em grupo, antes de ser
 
 **PEND02 — Dados dos candidatos:** escolher os nomes, números e partidos fictícios de cada candidato, garantindo que os números sejam exclusivos dentro de cada cargo.
 
-**PEND03 — Voto nulo:** definir como o sistema identificará e registrará um voto nulo, caso essa funcionalidade faça parte do escopo.
+**PEND03 — Voto nulo:** definir como o sistema identificará e registrará um voto nulo, caso essa funcionalidade faça parte do escopo. **RESOLVIDO**
 
 **PEND04 — Número não encontrado:** definir o que acontecerá após a mensagem de candidato não encontrado e como o eleitor poderá prosseguir.
 

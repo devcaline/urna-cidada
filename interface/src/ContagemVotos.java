@@ -17,6 +17,9 @@ public class ContagemVotos {
     // Armazena os votos em branco por nome do cargo
     private static final Map<String, Integer> votosBrancos = new HashMap<>();
 
+    // Armazena os votos nulos por nome do cargo
+    private static final Map<String, Integer> votosNulos = new HashMap<>();
+
     public static void registrarVotoCandidato(Candidato candidato) {
         if (candidato != null) {
             String numero = candidato.getNumero();
@@ -31,6 +34,13 @@ public class ContagemVotos {
         }
     }
 
+    public static void registrarVotoNulo(Cargo cargo) {
+        if (cargo != null) {
+            String nomeCargo = cargo.getNome();
+            votosNulos.put(nomeCargo, votosNulos.getOrDefault(nomeCargo, 0) + 1);
+        }
+    }
+
     public static int getVotosCandidato(Candidato candidato) {
         if (candidato == null) return 0;
         return votosCandidatos.getOrDefault(candidato.getNumero(), 0);
@@ -39,6 +49,11 @@ public class ContagemVotos {
     public static int getVotosBrancos(Cargo cargo) {
         if (cargo == null) return 0;
         return votosBrancos.getOrDefault(cargo.getNome(), 0);
+    }
+
+    public static int getVotosNulos(Cargo cargo) {
+        if (cargo == null) return 0;
+        return votosNulos.getOrDefault(cargo.getNome(), 0);
     }
 
     public static void abrir() {
@@ -79,6 +94,16 @@ public class ContagemVotos {
                     cargo.getNome(),
                     getVotosBrancos(cargo)
             });
+
+            // Voto nulo do respectivo cargo
+            modelo.addRow(new Object[]{
+                    "VOTO NULO",
+                    "-",
+                    "-",
+                    cargo.getNome(),
+                    getVotosNulos(cargo)
+            });
+
         }
 
         JTable tabela = new JTable(modelo);

@@ -92,8 +92,8 @@ public class Urna {
                 }
 
             }else{
-                nome.setText("NÃO ENCONTRADO");
-                partido.setText("PARTIDO NÃO ENCONTRADO");
+                nome.setText("VOTO NULO");
+                partido.setText("NÚMERO ERRADO");
                 try{
                     Image img = ImageIO.read(new File("assents/sem_foto.jpg"));
 
@@ -376,6 +376,7 @@ public class Urna {
 
             Cargo cargoVotado = votacao.getCargoAtual();
             boolean eraBranco = votacao.isBranco();
+            boolean eraNulo = votacao.isNulo();
             Optional<Candidato> candidatoVotado = votacao.getCandidatoEncontrado();
 
             boolean confirmou = votacao.confirmar();
@@ -384,8 +385,6 @@ public class Urna {
             if(!confirmou){
                 if(!votacao.isNumeroCompleto()){
                     JOptionPane.showMessageDialog(janela, "NÚMERO INCOMPLETO");
-                }else{
-                    JOptionPane.showMessageDialog(janela, "CANDIDATO NÃO ENCONTRADO");
                 }
                 return;
             }
@@ -393,7 +392,9 @@ public class Urna {
             // Registra o voto contabilizado
             if (eraBranco) {
                 ContagemVotos.registrarVotoBranco(cargoVotado);
-            } else if (candidatoVotado.isPresent()) {
+            }else if(eraNulo){
+                ContagemVotos.registrarVotoNulo(cargoVotado);
+            }else if (candidatoVotado.isPresent()) {
                 ContagemVotos.registrarVotoCandidato(candidatoVotado.get());
             }
 
