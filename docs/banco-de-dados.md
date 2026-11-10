@@ -107,14 +107,22 @@ Antes da oficina o resultado deve ser **0**, que é a conferência inicial da **
 Pela IDE, rode `Menu` com a pasta de trabalho em `interface/` (para as fotos aparecerem). Pelo terminal, de dentro de `interface/`:
 
 ```bash
-mvn -q -f ../urna/projeto_urna/pom.xml compile exec:java -Dexec.mainClass=Menu
+mvn -q -f ../urna/projeto_urna/pom.xml compile exec:java "-Dexec.mainClass=Menu"
 ```
 
-No console aparece `[Firebase] Conectado ao projeto ...`. Cada CONFIRMA cria um documento em `sessoes/oficina-2026/votos`, e a tela **Contagem de Votos** lê os votos direto do Firestore.
+Ao abrir, a urna pergunta o **modo**:
+
+| Botão | Para quê | Sessão no banco |
+|---|---|---|
+| **ENSAIO (teste)** | Testar e demonstrar | `ensaio` |
+| **OFICINA (votação real)** | Votação com os alunos | `oficina-2026` |
+
+O Menu Principal mostra o modo em uso: **MODO ENSAIO** em laranja ou **VOTAÇÃO REAL** em verde. Para trocar de modo, feche o programa e abra de novo.
+Cada CONFIRMA cria um documento em `sessoes/<sessão>/votos`, um por cargo, e a tela **Contagem de Votos** lê os votos direto do Firestore. O rodapé dela mostra a sessão.
 Se a chave não for encontrada ou o Firestore não responder, **a urna não abre**. Nenhum voto fica fora do banco.
 
-### 3.5 Trocar de sessão (nova oficina)
-Defina a variável de ambiente `URNA_SESSAO` (ou `-Durna.sessao=...`) com um novo nome, por exemplo `oficina-escola-x`, e rode `InicializarBanco` de novo.
+### 3.5 Outra sessão (nova oficina)
+Para uma escola nova, mude `SESSAO_PADRAO` em `BancoDeDados` ou rode `InicializarBanco` com `-Durna.sessao=nome-da-sessao` para conferir a contagem de outra sessão.
 
 ## 4. Código da persistência
 

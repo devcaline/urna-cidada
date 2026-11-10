@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 
+import br.edu.unijorge.urnacidada.infraestrutura.BancoDeDados;
+
 
 public class Menu {
 
@@ -57,15 +59,55 @@ public class Menu {
             CadastroVotantes.abrirCadastroVotantes();
         });
 
+        // Aviso do modo em uso, para ninguém votar na sessão errada
+        String sessao = BancoDeDados.idSessao();
+        boolean ensaio = BancoDeDados.SESSAO_ENSAIO.equals(sessao);
+        JLabel lblSessao = new JLabel(ensaio
+                ? "MODO ENSAIO (teste) — sessão " + sessao
+                : "VOTAÇÃO REAL — sessão " + sessao, SwingConstants.CENTER);
+        lblSessao.setBounds(0, 295, 400, 25);
+        lblSessao.setFont(new Font("Arial", Font.BOLD, 13));
+        lblSessao.setForeground(ensaio ? new Color(210, 100, 0) : new Color(0, 130, 0));
+
         janela.add(titulo);
         janela.add(btnCandidatos);
 
         janela.add(btnContagem);
         janela.add(btnUrna);
+        janela.add(lblSessao);
 
         janela.setVisible(true);
     }
+
+    /**
+     * Pergunta, ao abrir o programa, se é um ensaio (teste) ou a votação real da oficina.
+     * @return false se a janela foi fechada sem escolher
+     */
+    private static boolean escolherSessao() {
+        String[] opcoes = {"ENSAIO (teste)", "OFICINA (votação real)"};
+        int escolha = JOptionPane.showOptionDialog(null,
+                "Como a urna vai ser usada agora?\n\n"
+                        + "ENSAIO: para testar e demonstrar. Os votos vão para a sessão \""
+                        + BancoDeDados.SESSAO_ENSAIO + "\".\n"
+                        + "OFICINA: votação de verdade com os alunos. Os votos vão para a sessão \""
+                        + BancoDeDados.SESSAO_PADRAO + "\".",
+                "Urna Cidadã — escolha o modo",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
+        if (escolha == 0) {
+            BancoDeDados.usarSessao(BancoDeDados.SESSAO_ENSAIO);
+            return true;
+        }
+        if (escolha == 1) {
+            BancoDeDados.usarSessao(BancoDeDados.SESSAO_PADRAO);
+            return true;
+        }
+        return false;
+    }
+
     public static void main(String[] args) {
+        if (!escolherSessao()) {
+            System.exit(0);
+        }
         main();
     }
 }

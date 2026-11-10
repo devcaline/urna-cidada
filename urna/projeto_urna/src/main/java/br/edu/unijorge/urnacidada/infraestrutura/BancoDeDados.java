@@ -15,10 +15,14 @@ import java.util.concurrent.ExecutionException;
  * {@link #votos()} lança {@link ErroRepositorioException} e a votação não começa.
  */
 public final class BancoDeDados {
-    /** Sessão usada quando nada é configurado. Troque com -Durna.sessao=... ou a variável URNA_SESSAO. */
+    /** Sessão da votação real. Usada quando nada é escolhido nem configurado. */
     public static final String SESSAO_PADRAO = "oficina-2026";
+    /** Sessão para testes e demonstração, separada da votação real. */
+    public static final String SESSAO_ENSAIO = "ensaio";
 
     private static RepositorioVotos votos;
+    /** Sessão escolhida na tela inicial (botões ENSAIO/OFICINA); tem prioridade sobre a configuração. */
+    private static String sessaoEscolhida;
 
     private BancoDeDados() { }
 
@@ -39,8 +43,32 @@ public final class BancoDeDados {
         return "Firebase Firestore — sessão " + idSessao();
     }
 
-    public static String idSessao() {
+    /**
+     * Sessão em uso: a escolhida na tela inicial; senão -Durna.sessao=... ou a variável URNA_SESSAO;
+     * senão {@link #SESSAO_PADRAO}.
+     */
+    public static synchronized String idSessao() {
+        if (sessaoEscolhida != null) {
+            return sessaoEscolhida;
+        }
         return Configuracao.ler("urna.sessao", "URNA_SESSAO").orElse(SESSAO_PADRAO);
+    }
+
+    /** Define a sessão das próximas votações. Se mudar, a próxima chamada a {@link #votos()} reconecta nela. */
+    public static synchronized void usarSessao(String idSessao) {
+        if (idSessao == null || idSessao.isBlank()) {
+            throw new IllegalArgumentException("Sessão deve ser informada.");
+        }
+        if (!idSessao.trim().equals(idSessao())) {
+            votos = null;
+        }
+        sessaoEscolhida = idSessao.trim();
+    }
+
+    /** Volta a usar a sessão da configuração (para testes). */
+    static synchronized void esquecerSessaoEscolhida() {
+        sessaoEscolhida = null;
+        votos = null;
     }
 
     private static RepositorioVotos conectar() {
