@@ -8,10 +8,17 @@ import javax.sound.sampled.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 import br.edu.unijorge.urnacidada.dados.CatalogoCandidatos;
+import br.edu.unijorge.urnacidada.dominio.enums.TipoVoto;
 import br.edu.unijorge.urnacidada.dominio.modelo.Candidato;
 import br.edu.unijorge.urnacidada.dominio.modelo.Cargo;
+import br.edu.unijorge.urnacidada.dominio.modelo.Voto;
+import br.edu.unijorge.urnacidada.infraestrutura.BancoDeDados;
+import br.edu.unijorge.urnacidada.repositorio.ErroRepositorioException;
+import br.edu.unijorge.urnacidada.repositorio.RepositorioVotos;
 import br.edu.unijorge.urnacidada.servico.VotacaoEleitor;
 
 public class Urna {
@@ -142,6 +149,22 @@ public class Urna {
     // ── Abertura da janela principal ──────────────────────────────────────────
     public static void abrirUrna() throws IOException {
         VotacaoEleitor votacao = new VotacaoEleitor(CatalogoCandidatos.criarCargos());
+
+        // Sem acesso ao Firebase a urna não abre: nenhum voto pode ficar fora do banco
+        RepositorioVotos repositorio;
+        try {
+            repositorio = BancoDeDados.votos();
+        } catch (ErroRepositorioException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null,
+                    "SEM CONEXÃO COM O BANCO DE DADOS (FIREBASE).\nA votação não pode começar.\n\n" + ex.getMessage(),
+                    "Erro no banco de dados", JOptionPane.ERROR_MESSAGE);
+            Menu.main();
+            return;
+        }
+        // ID do voto da etapa atual. Só muda depois que o voto é gravado: se a gravação falhar e o
+        // eleitor apertar CONFIRMA de novo, o mesmo ID é reenviado e o banco não duplica o voto.
+        AtomicReference<String> idVotoDaEtapa = new AtomicReference<>(UUID.randomUUID().toString());
 
         // Dimensões globais
         final int W = 900, H = 575;
@@ -373,30 +396,38 @@ public class Urna {
         });
 
         confirma.addActionListener(e -> {
+            if (votacao.isEncerrada()) {
+                return;
+            }
 
             Cargo cargoVotado = votacao.getCargoAtual();
             boolean eraBranco = votacao.isBranco();
             boolean eraNulo = votacao.isNulo();
             Optional<Candidato> candidatoVotado = votacao.getCandidatoEncontrado();
 
-            boolean confirmou = votacao.confirmar();
-
-            // 1. não confirmou: avisa o motivo
-            if(!confirmou){
-                if(!votacao.isNumeroCompleto()){
-                    JOptionPane.showMessageDialog(janela, "NÚMERO INCOMPLETO");
-                }
+            // 1. número incompleto: avisa e não registra nada
+            if(!eraBranco && !votacao.isNumeroCompleto()){
+                JOptionPane.showMessageDialog(janela, "NÚMERO INCOMPLETO");
                 return;
             }
 
-            // Registra o voto contabilizado
-            if (eraBranco) {
-                ContagemVotos.registrarVotoBranco(cargoVotado);
-            }else if(eraNulo){
-                ContagemVotos.registrarVotoNulo(cargoVotado);
-            }else if (candidatoVotado.isPresent()) {
-                ContagemVotos.registrarVotoCandidato(candidatoVotado.get());
+            // Branco, nulo (número completo sem candidato — RN10) ou candidato encontrado
+            TipoVoto tipo = eraBranco ? TipoVoto.BRANCO : eraNulo ? TipoVoto.NULO : TipoVoto.CANDIDATO;
+            Candidato escolhido = tipo == TipoVoto.CANDIDATO ? candidatoVotado.get() : null;
+            Voto registro = new Voto(idVotoDaEtapa.get(), tipo, cargoVotado, escolhido, true);
+
+            // Grava no banco ANTES de avançar: se falhar, o eleitor continua no mesmo cargo
+            try {
+                repositorio.salvar(registro);
+            } catch (ErroRepositorioException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(janela,
+                        "NÃO FOI POSSÍVEL REGISTRAR O VOTO.\nChame o mesário e aperte CONFIRMA novamente.",
+                        "Erro ao registrar voto", JOptionPane.ERROR_MESSAGE);
+                return;
             }
+            idVotoDaEtapa.set(UUID.randomUUID().toString());
+            votacao.confirmar();
 
             // 2. confirmou o último cargo: FIM
             if(votacao.isEncerrada()){

@@ -36,8 +36,11 @@ class VotoTest {
         assertThrows(IllegalArgumentException.class, () -> new Voto("id", null, cargo, candidato, false));
         assertThrows(IllegalArgumentException.class, () -> new Voto("id", TipoVoto.BRANCO, null, null, false));
     }
-    @Test void naoDefineComportamentoNulo() {
-        assertThrows(IllegalArgumentException.class, () -> new Voto("id", TipoVoto.NULO, cargo, null, false));
+    @Test void representaNuloSemCandidato() {
+        Voto voto = new Voto("exemplo-4", TipoVoto.NULO, cargo, null, true);
+        assertEquals(TipoVoto.NULO, voto.getTipo());
+        assertSame(cargo, voto.getCargo());
+        assertNull(voto.getCandidato());
         assertThrows(IllegalArgumentException.class, () -> new Voto("id", TipoVoto.NULO, cargo, candidato, false));
     }
     @ParameterizedTest @NullAndEmptySource @ValueSource(strings = {" ", "\n"})
