@@ -43,6 +43,19 @@ class ApuracaoTest {
         assertEquals(100.0, apuracao.percentual(1, deputado), 1e-9);
     }
 
+    @Test void contaNulosSeparadosDosBrancosEEntramNoTotal() {
+        Apuracao apuracao = new Apuracao(List.of(
+                new Voto("1", TipoVoto.NULO, presidente, null, true),
+                new Voto("2", TipoVoto.NULO, presidente, null, true),
+                new Voto("3", TipoVoto.BRANCO, presidente, null, true),
+                new Voto("4", TipoVoto.CANDIDATO, presidente, candidato(presidente, "12"), true)));
+        assertEquals(2, apuracao.votosNulos(presidente));
+        assertEquals(0, apuracao.votosNulos(deputado));
+        assertEquals(1, apuracao.votosEmBranco(presidente));
+        assertEquals(4, apuracao.totalDoCargo(presidente));
+        assertEquals(50.0, apuracao.percentual(apuracao.votosNulos(presidente), presidente), 1e-9);
+    }
+
     @Test void ignoraVotoNaoConfirmado() {
         Apuracao apuracao = new Apuracao(List.of(
                 new Voto("1", TipoVoto.CANDIDATO, presidente, candidato(presidente, "43"), false)));

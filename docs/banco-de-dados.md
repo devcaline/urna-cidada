@@ -47,6 +47,14 @@ sessoes/{idSessao}                  ← uma sessão por oficina (padrão: oficin
   "numero": null, "candidato": null, "partido": null }
 ```
 
+`sessoes/oficina-2026/votos/c42e...` (voto nulo: número completo que não é de nenhum candidato, RN10)
+```json
+{ "cargo": "presidente", "cargoNome": "Presidente", "tipo": "NULO",
+  "numero": null, "candidato": null, "partido": null }
+```
+
+O campo `tipo` aceita `CANDIDATO`, `BRANCO` ou `NULO`. Brancos e nulos não guardam número nem candidato. No voto nulo, o número digitado também não é guardado: ele não pertence a nenhum candidato e não entra na apuração.
+
 ## 2. Decisões de modelagem
 
 | Decisão | Por quê |
