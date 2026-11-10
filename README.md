@@ -12,6 +12,14 @@ Simulador de urna eletrônica feito em **Java**, com interface gráfica em **Swi
 
 A ação é **apartidária**: todos os partidos e candidatos da simulação são **fictícios**, sem vínculo com legendas ou candidatos reais.
 
+## 🎬 Vídeo de apresentação
+
+Material complementar para a apresentação do projeto de extensão:
+
+[![Vídeo de apresentação da Urna Cidadã](https://img.youtube.com/vi/XhsV7PPJD10/hqdefault.jpg)](https://youtu.be/XhsV7PPJD10)
+
+▶️ Assista no YouTube: <https://youtu.be/XhsV7PPJD10>
+
 ## ✨ Funcionalidades previstas
 
 - Votação em sequência para dois cargos (proporcional e majoritário)
