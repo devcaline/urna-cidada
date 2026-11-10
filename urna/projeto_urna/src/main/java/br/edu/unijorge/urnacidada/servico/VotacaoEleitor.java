@@ -67,6 +67,10 @@ public class VotacaoEleitor {
         return numeroDigitado.length() >= getCargoAtual().getQuantidadeDigitos();
     }
 
+    public boolean isNulo(){
+        return !branco && isNumeroCompleto() && getCandidatoEncontrado().isEmpty();
+    }
+
     public Optional<Candidato> getCandidatoEncontrado(){
         return  getCargoAtual().buscarCandidato(getNumeroDigitado());
     }
@@ -93,7 +97,7 @@ public class VotacaoEleitor {
             return false;
         }
 
-        boolean escolhaValida = branco || getCandidatoEncontrado().isPresent();
+        boolean escolhaValida = branco || isNumeroCompleto();
 
         if(!escolhaValida){
             return false;

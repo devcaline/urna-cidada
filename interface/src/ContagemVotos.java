@@ -21,7 +21,7 @@ public class ContagemVotos {
     }
 
     public static void abrir() {
-        // Lê os votos gravados no banco (Firestore ou memória, conforme a configuração)
+        // Lê os votos gravados no banco de dados (Firebase Firestore)
         List<Voto> votos;
         try {
             votos = BancoDeDados.votos().listar();
@@ -74,6 +74,17 @@ public class ContagemVotos {
                     cargo.getNome(),
                     brancos,
                     formatarPercentual(apuracao.percentual(brancos, cargo))
+            });
+
+            // Voto nulo do respectivo cargo
+            int nulos = apuracao.votosNulos(cargo);
+            modelo.addRow(new Object[]{
+                    "VOTO NULO",
+                    "-",
+                    "-",
+                    cargo.getNome(),
+                    nulos,
+                    formatarPercentual(apuracao.percentual(nulos, cargo))
             });
         }
 

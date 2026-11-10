@@ -57,6 +57,15 @@ class RepositorioVotosFirestoreTest {
         assertNull(branco.getCandidato());
     }
 
+    @Test void gravaELeVotoNulo() {
+        RepositorioVotosFirestore repositorio = novaSessao();
+        repositorio.salvar(new Voto("nulo", TipoVoto.NULO, deputado, null, true));
+        Voto lido = repositorio.listar().get(0);
+        assertEquals(TipoVoto.NULO, lido.getTipo());
+        assertSame(deputado, lido.getCargo());
+        assertNull(lido.getCandidato());
+    }
+
     @Test void reenviarMesmoIdNaoDuplicaNemAltera() {
         RepositorioVotosFirestore repositorio = novaSessao();
         repositorio.salvar(new Voto("mesmo", TipoVoto.CANDIDATO, presidente, presidente.buscarCandidato("43").orElseThrow(), true));

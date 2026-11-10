@@ -99,8 +99,8 @@ public class Urna {
                 }
 
             }else{
-                nome.setText("NÃO ENCONTRADO");
-                partido.setText("PARTIDO NÃO ENCONTRADO");
+                nome.setText("VOTO NULO");
+                partido.setText("NÚMERO ERRADO");
                 try{
                     Image img = ImageIO.read(new File("assents/sem_foto.jpg"));
 
@@ -402,22 +402,21 @@ public class Urna {
 
             Cargo cargoVotado = votacao.getCargoAtual();
             boolean eraBranco = votacao.isBranco();
+            boolean eraNulo = votacao.isNulo();
             Optional<Candidato> candidatoVotado = votacao.getCandidatoEncontrado();
 
-            // 1. escolha inválida: avisa o motivo e não registra nada
-            if(!eraBranco && candidatoVotado.isEmpty()){
-                if(!votacao.isNumeroCompleto()){
-                    JOptionPane.showMessageDialog(janela, "NÚMERO INCOMPLETO");
-                }else{
-                    JOptionPane.showMessageDialog(janela, "CANDIDATO NÃO ENCONTRADO");
-                }
+            // 1. número incompleto: avisa e não registra nada
+            if(!eraBranco && !votacao.isNumeroCompleto()){
+                JOptionPane.showMessageDialog(janela, "NÚMERO INCOMPLETO");
                 return;
             }
 
+            // Branco, nulo (número completo sem candidato — RN10) ou candidato encontrado
+            TipoVoto tipo = eraBranco ? TipoVoto.BRANCO : eraNulo ? TipoVoto.NULO : TipoVoto.CANDIDATO;
+            Candidato escolhido = tipo == TipoVoto.CANDIDATO ? candidatoVotado.get() : null;
+            Voto registro = new Voto(idVotoDaEtapa.get(), tipo, cargoVotado, escolhido, true);
+
             // Grava no banco ANTES de avançar: se falhar, o eleitor continua no mesmo cargo
-            Voto registro = eraBranco
-                    ? new Voto(idVotoDaEtapa.get(), TipoVoto.BRANCO, cargoVotado, null, true)
-                    : new Voto(idVotoDaEtapa.get(), TipoVoto.CANDIDATO, cargoVotado, candidatoVotado.get(), true);
             try {
                 repositorio.salvar(registro);
             } catch (ErroRepositorioException ex) {
