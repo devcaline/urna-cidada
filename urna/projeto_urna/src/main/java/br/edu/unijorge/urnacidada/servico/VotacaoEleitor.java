@@ -67,8 +67,21 @@ public class VotacaoEleitor {
         return numeroDigitado.length() >= getCargoAtual().getQuantidadeDigitos();
     }
 
+
+
+    /** É voto nulo quando o número está completo mas não é de nenhum candidato (TSE). */
     public boolean isNulo(){
         return !branco && isNumeroCompleto() && getCandidatoEncontrado().isEmpty();
+    }
+
+
+    /** Senha do mesário para encerrar o loop de votação: 9990 em Deputado, 99 em Presidente. */
+    public boolean isSenhaDeSaida(){
+        if(isEncerrada() || branco){
+            return false;
+        }
+        String senha = getCargoAtual().getQuantidadeDigitos() == 4 ? "9990" : "99";
+        return numeroDigitado.equals(senha);
     }
 
     public Optional<Candidato> getCandidatoEncontrado(){

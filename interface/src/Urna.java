@@ -400,6 +400,16 @@ public class Urna {
                 return;
             }
 
+
+            // Senha do mesário (9990 ou 99): sai do loop e volta ao menu, sem gravar voto
+            if (votacao.isSenhaDeSaida()) {
+                janela.dispose();
+                Menu.main();
+                return;
+            }
+
+
+
             Cargo cargoVotado = votacao.getCargoAtual();
             boolean eraBranco = votacao.isBranco();
             boolean eraNulo = votacao.isNulo();
@@ -475,7 +485,7 @@ public class Urna {
                 Timer timer = new Timer(4000, evt -> {
                     janela.dispose();
                     try {
-                        Menu.main();
+                        abrirUrna();
                     } catch (Exception ex) {
                         ex.printStackTrace();
                     }
