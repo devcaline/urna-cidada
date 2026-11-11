@@ -55,8 +55,12 @@ public class Menu {
         btnUrna.setForeground(Color.BLACK);
         btnUrna.setFont(new Font("Arial", Font.BOLD, 14));
         btnUrna.addActionListener(e -> {
-            janela.setVisible(false);
-            CadastroVotantes.abrirCadastroVotantes();
+            janela.dispose();
+            try {
+                Urna.abrirUrna();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         });
 
         // Aviso do modo em uso, para ninguém votar na sessão errada

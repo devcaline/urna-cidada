@@ -126,6 +126,10 @@ As regras de negócio determinam como a votação deverá funcionar.
 
 RN30 — Branco com número digitado: o botão Branco só tem efeito com o visor vazio. Havendo número digitado, o eleitor deve usar Corrige antes, como na urna eletrônica do TSE.
 
+**RN31 — Votação contínua:** ao iniciar a votação, a urna recebe um eleitor após o outro, sem cadastro prévio; o controle de quem já votou é feito pelo mesário presencialmente.
+
+**RN32 — Senha de encerramento:** o mesário encerra a votação e volta ao menu digitando 9990 na etapa de Deputado Federal ou 99 na etapa de Presidente e pressionando Confirma. A senha não é registrada como voto.
+
 ## 5. Fluxo básico da votação:
 1. O eleitor inicia a sessão de votação.
 
