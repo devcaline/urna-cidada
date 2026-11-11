@@ -23,6 +23,7 @@ import java.util.Optional;
  *   <li>Emulador local, se a variável FIRESTORE_EMULATOR_HOST estiver definida (não precisa de chave);</li>
  *   <li>arquivo indicado em -Dfirebase.credenciais=... ou na variável FIREBASE_CREDENCIAIS
  *       (ou GOOGLE_APPLICATION_CREDENTIALS);</li>
+ *   <li>arquivo {@code %LOCALAPPDATA%/UrnaCidada/serviceAccount.json};</li>
  *   <li>arquivo {@code serviceAccount.json} ou {@code *firebase-adminsdk*.json} na pasta atual
  *       ou em até 3 pastas acima (por exemplo, na raiz do repositório).</li>
  * </ol>
@@ -79,7 +80,19 @@ public final class ConexaoFirebase {
             }
             return Optional.of(arquivo);
         }
+        Optional<Path> perfilLocal = localizarNoPerfilDoUsuario();
+        if (perfilLocal.isPresent()) {
+            return perfilLocal;
+        }
         return procurarAPartirDe(Path.of(""));
+    }
+
+    private static Optional<Path> localizarNoPerfilDoUsuario() {
+        return Optional.ofNullable(System.getenv("LOCALAPPDATA"))
+                .filter(valor -> !valor.isBlank())
+                .map(Path::of)
+                .map(pasta -> pasta.resolve("UrnaCidada").resolve("serviceAccount.json"))
+                .filter(Files::isRegularFile);
     }
 
     /** Procura a chave na pasta informada e em até {@value #PASTAS_ACIMA} pastas acima dela. */

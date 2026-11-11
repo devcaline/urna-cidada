@@ -1,5 +1,10 @@
-D:\projeto_urna\src\test\java\br\edu\unijorge\urnacidada\dominio\modelo\CandidatoTest.java
-D:\projeto_urna\src\test\java\br\edu\unijorge\urnacidada\dominio\modelo\CargoTest.java
-D:\projeto_urna\src\test\java\br\edu\unijorge\urnacidada\dominio\modelo\PartidoTest.java
-D:\projeto_urna\src\test\java\br\edu\unijorge\urnacidada\dominio\modelo\UsuarioTest.java
-D:\projeto_urna\src\test\java\br\edu\unijorge\urnacidada\dominio\modelo\VotoTest.java
+E:\urna-cidada-bren\urna-cidada\urna\projeto_urna\src\test\java\br\edu\unijorge\urnacidada\dominio\modelo\CandidatoTest.java
+E:\urna-cidada-bren\urna-cidada\urna\projeto_urna\src\test\java\br\edu\unijorge\urnacidada\dominio\modelo\CargoTest.java
+E:\urna-cidada-bren\urna-cidada\urna\projeto_urna\src\test\java\br\edu\unijorge\urnacidada\dominio\modelo\PartidoTest.java
+E:\urna-cidada-bren\urna-cidada\urna\projeto_urna\src\test\java\br\edu\unijorge\urnacidada\dominio\modelo\UsuarioTest.java
+E:\urna-cidada-bren\urna-cidada\urna\projeto_urna\src\test\java\br\edu\unijorge\urnacidada\dominio\modelo\VotoTest.java
+E:\urna-cidada-bren\urna-cidada\urna\projeto_urna\src\test\java\br\edu\unijorge\urnacidada\infraestrutura\BancoDeDadosTest.java
+E:\urna-cidada-bren\urna-cidada\urna\projeto_urna\src\test\java\br\edu\unijorge\urnacidada\infraestrutura\ConexaoFirebaseTest.java
+E:\urna-cidada-bren\urna-cidada\urna\projeto_urna\src\test\java\br\edu\unijorge\urnacidada\infraestrutura\RepositorioVotosFirestoreTest.java
+E:\urna-cidada-bren\urna-cidada\urna\projeto_urna\src\test\java\br\edu\unijorge\urnacidada\repositorio\RepositorioVotosBaseTest.java
+E:\urna-cidada-bren\urna-cidada\urna\projeto_urna\src\test\java\br\edu\unijorge\urnacidada\servico\ApuracaoTest.java
