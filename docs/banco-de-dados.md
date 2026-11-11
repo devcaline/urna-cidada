@@ -82,16 +82,16 @@ O plano gratuito (Spark) é suficiente: ele permite 20 mil gravações e 50 mil 
 ### 3.2 Gerar a chave do Admin SDK
 1. Clique na engrenagem ⚙️ > **Configurações do projeto** > aba **Contas de serviço**.
 2. Em **Firebase Admin SDK**, clique em **Gerar nova chave privada**. Será baixado um arquivo como `urna-cidada-firebase-adminsdk-abc12-1234567890.json`.
-3. Coloque esse arquivo na **pasta raiz do repositório** (`urna-cidada/`), sem renomear.
-4. Rode `git status` e confira que o arquivo **não aparece**: o `.gitignore` já bloqueia `*firebase-adminsdk*.json` e `*serviceAccount*.json`.
+3. Salve o arquivo fora do repositório, em `%LOCALAPPDATA%\UrnaCidada\serviceAccount.json` (por exemplo, `C:\Users\<usuário>\AppData\Local\UrnaCidada\serviceAccount.json`). Crie a pasta `UrnaCidada` se ela ainda não existir.
+4. Alternativamente, salve-o em outro caminho e configure `FIREBASE_CREDENCIAIS` com o caminho completo antes de iniciar a aplicação.
 
-> ⚠️ **A chave dá acesso total ao banco.** Nunca envie para o GitHub nem para grupos abertos. Compartilhe com o grupo só em mensagem privada.
-> Se ela vazar, apague-a no Google Cloud Console > IAM > Contas de serviço > Chaves e gere outra.
+> ⚠️ **A chave dá acesso ao banco.** Nunca a envie para o GitHub nem para conversas ou grupos abertos. Se ela vazar, revogue-a em Google Cloud Console > IAM e administrador > Contas de serviço > Chaves e gere outra.
 
 O programa procura a chave nesta ordem:
 1. caminho em `-Dfirebase.credenciais=...` ou na variável de ambiente `FIREBASE_CREDENCIAIS`;
 2. variável `GOOGLE_APPLICATION_CREDENTIALS`;
-3. arquivo `serviceAccount.json` ou `*firebase-adminsdk*.json` na pasta atual ou em até 3 pastas acima.
+3. `%LOCALAPPDATA%\UrnaCidada\serviceAccount.json`;
+4. arquivo `serviceAccount.json` ou `*firebase-adminsdk*.json` na pasta atual ou em até 3 pastas acima.
 
 ### 3.3 Preparar o banco
 Rode a classe `br.edu.unijorge.urnacidada.infraestrutura.InicializarBanco` pela IDE (botão ▶ no `main`) ou pelo terminal, de dentro de `urna/projeto_urna`:
