@@ -79,7 +79,12 @@ Todas as entregas vão até **30/11/2026**.
 
 ## 👥 Equipe
 
-*A definir.*
+° Giovana Gusmão Santos
+° Iamsin Luise Santos da Silva
+° Igor Jerônimo Rosário de Almeida
+° Monique Amorim Mendes
+° Victória Caroline Bittencourt Costa
+° William Silva Lago
 
 ## 🔒 Segurança
 
