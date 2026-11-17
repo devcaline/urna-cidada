@@ -81,7 +81,7 @@ Todas as entregas vão até **30/11/2026**.
 
 ° Giovana Gusmão Santos
 
-° Iamsin Luise Santos da Silva
+° Iasmin Luise Santos da Silva
 
 ° Igor Jerônimo Rosário de Almeida
 
