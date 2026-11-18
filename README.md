@@ -50,11 +50,59 @@ O código deve ser organizado em classes e pacotes coerentes com o paradigma ori
 
 ```text
 urna-cidada/
-├── docs/          # casos de uso, modelagem de classes e dos dados no Firestore
-├── src/           # código-fonte Java
-├── material/      # material educativo sobre fake news e deepfakes
+├── docs/                                  # Casos de uso, requisitos e modelagem Firestore
+├── assents/                               # Imagens dos candidatos e efeitos sonoros (.wav)
+├── urna/
+│   └── projeto_urna/                      # Projeto Java Maven principal
+│       ├── pom.xml                        # Configurações do Maven e dependências (Firebase, JUnit)
+│       └── src/
+│           ├── main/
+│           │   ├── java/br/edu/unijorge/urnacidada/
+│           │   │   ├── dados/             # Catálogo inicial de partidos e candidatos fictícios
+│           │   │   ├── dominio/           # Modelos de domínio (Candidato, Cargo, Partido, Voto, Usuario)
+│           │   │   ├── infraestrutura/    # Conexão e repositório Firebase Cloud Firestore
+│           │   │   ├── repositorio/       # Interfaces e contratos de persistência
+│           │   │   ├── servico/           # Regras de votação (VotacaoEleitor) e apuração
+│           │   │   ├── visao/             # Telas Java Swing (Menu, Urna, Contagem, Exibição)
+│           │   │   └── Main.java          # Classe de entrada alternativa
+│           │   └── resources/
+│           │       └── assents/           # Recursos estáticos empacotados pelo Maven
+│           └── test/                      # Testes unitários com JUnit 5
 └── README.md
 ```
+
+## 📌 Resumo das Implementações
+
+O projeto **Urna Cidadã** foi estruturado e refatorado aplicando as boas práticas de **Programação Orientada a Objetos (POO)** e separação em camadas, integrando interface gráfica (Swing), persistência em nuvem (Firebase Firestore) e recursos multimídia.
+
+### 🏛️ Destaques da Estrutura
+
+- **Camada de Visão unificada (`visao`):** todas as telas Swing foram consolidadas no pacote `br.edu.unijorge.urnacidada.visao`, eliminando conflitos de pacotes e desacoplando a interface da regra de negócio.
+- **Camada de Domínio e Serviços (`dominio` / `servico`):** validações estritas de número de dígitos por cargo, suporte a votos nominais, votos em branco e nulos, e cálculo automatizado de percentuais de apuração sem divisão por zero.
+- **Persistência Segura (`infraestrutura`):** integração com o Firebase Admin SDK no Firestore, garantindo idempotência de votos (UUID único por voto para evitar duplicidade em falhas de rede) e anonimato do eleitor.
+- **Recursos Multimídia:** fotos dinâmicas de candidatos e vice-candidatos, e reprodução de efeitos sonoros característicos da urna do TSE (`confirma-urna.wav` e `ok.wav`).
+
+---
+
+### 🔄 Controle de Sessão: Abertura e Encerramento
+
+O sistema oferece gerenciamento completo do ciclo da sessão eleitoral:
+
+1. **Seleção de Modo (Inicialização):**
+   - Ao iniciar pelo [Menu.java](file:///urna/projeto_urna/src/main/java/br/edu/unijorge/urnacidada/visao/Menu.java), o sistema solicita o modo de operação:
+     - **ENSAIO (teste):** direciona os registros para a sessão `ensaio`, ideal para testes de mesa e demonstrações sem poluir os dados oficiais.
+     - **OFICINA (votação real):** direciona os registros para a sessão oficial da escola (`oficina-2026`).
+
+2. **Abertura da Sessão:**
+   - Através do botão **"Abrir Sessão"**, a urna verifica a conectividade com o Cloud Firestore e libera a tela de votação para o primeiro eleitor.
+   - A votação segue rigorosamente as regras eleitorais: primeiro para **Deputado Federal** (4 dígitos) e em seguida para **Presidente** (2 dígitos).
+
+3. **Encerramento da Sessão e Votação Contínua:**
+   - Ao confirmar o último cargo, o voto é gravado na nuvem, o som clássico do TSE é reproduzido e a tela de **FIM** é exibida com o registro de data e hora.
+   - O sistema oferece diálogo de confirmação para **Encerrar Sessão**:
+     - **Sim (Encerrar):** finaliza a rodada e retorna ao Menu Principal, permitindo que os mesários abram a **Contagem de Votos** e realizem a apuração final.
+     - **Não / Próximo Eleitor:** após um breve intervalo a urna reinicializa automaticamente para o próximo aluno votar, garantindo a dinâmica contínua da oficina.
+
 
 ## 📋 Etapas
 
