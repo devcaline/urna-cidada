@@ -1,3 +1,5 @@
+package br.edu.unijorge.urnacidada.visao;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -23,6 +25,27 @@ import br.edu.unijorge.urnacidada.servico.VotacaoEleitor;
 
 public class Urna {
 
+    public static File resolverArquivo(String caminhoRelativo) {
+        File f = new File(caminhoRelativo);
+        if (f.exists()) {
+            return f;
+        }
+        String[] tentativas = {
+            "interface/" + caminhoRelativo,
+            "src/main/resources/" + caminhoRelativo,
+            "urna/projeto_urna/src/main/resources/" + caminhoRelativo,
+            "urna/projeto_urna/" + caminhoRelativo,
+            "../interface/" + caminhoRelativo,
+            "../../interface/" + caminhoRelativo
+        };
+        for (String t : tentativas) {
+            File alt = new File(t);
+            if (alt.exists()) {
+                return alt;
+            }
+        }
+        return f;
+    }
 
     public static JLabel carregar_imagem(String src){
         JLabel foto = new JLabel();
@@ -31,19 +54,23 @@ public class Urna {
         foto.setBackground(new Color(185, 185, 190));
         foto.setOpaque(true);
         foto.setHorizontalAlignment(SwingConstants.CENTER);
-        try {
+        definirFoto(foto, src);
+        return foto;
+    }
 
-            Image img = ImageIO.read(new File(src));
+    public static void definirFoto(JLabel foto, String src) {
+        try {
+            File arquivo = resolverArquivo(src);
+            Image img = ImageIO.read(arquivo);
             foto.setIcon(new ImageIcon(img.getScaledInstance(140, 175, Image.SCALE_SMOOTH)));
+            foto.setText("");
         } catch (Exception e) {
+            foto.setIcon(null);
             foto.setFont(new Font("Arial", Font.PLAIN, 11));
             foto.setForeground(new Color(100, 100, 105));
             foto.setText("<html><center>SEM<br>FOTO</center></html>");
         }
-        return  foto;
     }
-
-
 
     public static String formatarVisor(String numero, int digitos){
         String visor = "";
@@ -72,6 +99,7 @@ public class Urna {
             voto.setText("BRANCO");
             nome.setText("BRANCO");
             partido.setText("PARTIDO INEXISTENTE");
+            definirFoto(foto, "assents/sem_foto.jpg");
             return;
         }
 
@@ -84,53 +112,16 @@ public class Urna {
                 if(encontrado.get().getVice() != null){                        // ← NOVO
                     vice.setText("VICE: " + encontrado.get().getVice());
                 }
-                try{
-                Image img = ImageIO.read(new File(encontrado.get().getFoto_src()));
-
-                foto.setIcon(new ImageIcon(
-                        img.getScaledInstance(140, 175, Image.SCALE_SMOOTH)
-                ));
-
-                foto.setText("");
-
-                }catch (Exception e){
-                    System.out.println("erro!");
-
-                }
-
+                definirFoto(foto, encontrado.get().getFoto_src());
             }else{
                 nome.setText("VOTO NULO");
                 partido.setText("NÚMERO ERRADO");
-                try{
-                    Image img = ImageIO.read(new File("assents/sem_foto.jpg"));
-
-                    foto.setIcon(new ImageIcon(
-                            img.getScaledInstance(140, 175, Image.SCALE_SMOOTH)
-                    ));
-
-                    foto.setText("");
-
-                }catch (Exception e){
-                    System.out.println("erro!");
-
-                }
+                definirFoto(foto, "assents/sem_foto.jpg");
             }
         }else{
             nome.setText("");
             partido.setText("");
-            try{
-                Image img = ImageIO.read(new File("assents/sem_foto.jpg"));
-
-                foto.setIcon(new ImageIcon(
-                        img.getScaledInstance(140, 175, Image.SCALE_SMOOTH)
-                ));
-
-                foto.setText("");
-
-            }catch (Exception e){
-                System.out.println("erro!");
-
-            }
+            definirFoto(foto, "assents/sem_foto.jpg");
         }
     }
 
@@ -189,7 +180,6 @@ public class Urna {
         JLabel lblBrasao = new JLabel("UJ", SwingConstants.CENTER);
         lblBrasao.setBounds(10, 8, 48, 48);
         lblBrasao.setFont(new Font("Serif", Font.PLAIN, 36));
-        //lblBrasao.setForeground(new Color(210, 195, 140));
         lblBrasao.setForeground(Color.blue);
 
         // Título TSE
@@ -278,7 +268,7 @@ public class Urna {
         lblNumeroTitulo.setFont(new Font("Arial", Font.PLAIN, 11));
         lblNumeroTitulo.setForeground(new Color(90, 90, 95));
 
-        // Display do voto (lógica preservada do Main)
+        // Display do voto
         JLabel voto = new JLabel(formatarVisor(votacao.getNumeroDigitado(), votacao.getCargoAtual().getQuantidadeDigitos()));
         voto.setBounds(185, 114, 300, 68);
         voto.setFont(new Font("Arial", Font.BOLD, 58));
@@ -315,15 +305,13 @@ public class Urna {
         main.add(lblNumeroTitulo);
         main.add(voto);
         main.add(lblCandidatoTitulo);
-        main.add(nome);
-        main.add(partido);
 
         // ── Lado direito: numpad escuro ───────────────────────────────────
         JPanel numpad = new JPanel(null);
         numpad.setBackground(new Color(28, 30, 36));
         numpad.setBounds(NUMPAD_X, 0, NUMPAD_W, MAIN_H);
 
-        // Grade de botões: 3 colunas × 4 linhas (última é o 0 centralizado)
+        // Grade de botões: 3 colunas × 4 linhas
         final int BW = 98, BH = 63;
         final int SX = 22, SY = 22, GX = 11, GY = 10;
 
@@ -339,12 +327,11 @@ public class Urna {
         JButton n8 = criarBotaoNum("8"); n8.setBounds(SX + (BW+GX),    SY + (BH+GY)*2,   BW, BH);
         JButton n9 = criarBotaoNum("9"); n9.setBounds(SX + (BW+GX)*2,  SY + (BH+GY)*2,   BW, BH);
 
-        // 0 centralizado na coluna do meio
         JButton n0 = criarBotaoNum("0"); n0.setBounds(SX + (BW+GX),    SY + (BH+GY)*3,   BW, BH);
 
-        // Botões de ação — largura proporcional para cobrir as 3 colunas
+        // Botões de ação
         final int AY   = SY + (BH+GY)*4 + 8;
-        final int AW   = (NUMPAD_W - SX*2 - GX*2) / 3;  // ~107px
+        final int AW   = (NUMPAD_W - SX*2 - GX*2) / 3;
 
         JButton branco = new JButton("BRANCO");
         branco.setBounds(SX, AY, AW, 52);
@@ -373,7 +360,6 @@ public class Urna {
         confirma.setBorderPainted(false);
         confirma.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        // ── Action listeners (lógica original preservada) ─────────────────
         ActionListener digitarNum = e -> {
             votacao.digitar(((JButton) e.getSource()).getText());
             atualizarTela(votacao, voto, nome, partido, foto, vice);
@@ -390,7 +376,6 @@ public class Urna {
         n0.addActionListener(digitarNum);
 
         corrige.addActionListener(e -> {
-
             votacao.corrigir();
             atualizarTela(votacao, voto, nome, partido, foto, vice);
         });
@@ -399,16 +384,6 @@ public class Urna {
             if (votacao.isEncerrada()) {
                 return;
             }
-
-
-            // Senha do mesário (9990 ou 99): sai do loop e volta ao menu, sem gravar voto
-            if (votacao.isSenhaDeSaida()) {
-                janela.dispose();
-                Menu.main();
-                return;
-            }
-
-
 
             Cargo cargoVotado = votacao.getCargoAtual();
             boolean eraBranco = votacao.isBranco();
@@ -421,12 +396,11 @@ public class Urna {
                 return;
             }
 
-            // Branco, nulo (número completo sem candidato — RN10) ou candidato encontrado
+            // Branco, nulo ou candidato encontrado
             TipoVoto tipo = eraBranco ? TipoVoto.BRANCO : eraNulo ? TipoVoto.NULO : TipoVoto.CANDIDATO;
             Candidato escolhido = tipo == TipoVoto.CANDIDATO ? candidatoVotado.get() : null;
             Voto registro = new Voto(idVotoDaEtapa.get(), tipo, cargoVotado, escolhido, true);
 
-            // Grava no banco ANTES de avançar: se falhar, o eleitor continua no mesmo cargo
             try {
                 repositorio.salvar(registro);
             } catch (ErroRepositorioException ex) {
@@ -441,16 +415,14 @@ public class Urna {
 
             // 2. confirmou o último cargo: FIM
             if(votacao.isEncerrada()){
-                // Toca o áudio de confirmação
                 try {
                     Clip clip = AudioSystem.getClip();
-                    clip.open(AudioSystem.getAudioInputStream(new File("assents/confirma-urna.wav")));
+                    clip.open(AudioSystem.getAudioInputStream(resolverArquivo("assents/confirma-urna.wav")));
                     clip.start();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
 
-                // Monta a tela de FIM no painel principal
                 main.removeAll();
                 main.setBackground(Color.WHITE);
 
@@ -480,9 +452,21 @@ public class Urna {
                 main.add(lblHoraFim);
                 main.repaint();
                 main.revalidate();
+                
+                int resposta = JOptionPane.showConfirmDialog(
+                    null,
+                    "Deseja Encerrar Sessão?",
+                    "Confirmar Encerramento",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE
+                );
+                if (resposta == JOptionPane.YES_OPTION) {
+                    janela.dispose();
+                    Menu.main();
+                    return;
+                }
 
-                // Após 4 segundos, volta ao menu
-                Timer timer = new Timer(4000, evt -> {
+                Timer timer = new Timer(1000, evt -> {
                     janela.dispose();
                     try {
                         abrirUrna();
@@ -492,7 +476,7 @@ public class Urna {
                 });
                 timer.setRepeats(false);
                 timer.start();
-
+                
                 return;
             }
 
@@ -500,16 +484,15 @@ public class Urna {
             cargo.setText(votacao.getCargoAtual().getNome());
             atualizarTela(votacao, voto, nome, partido, foto, vice);
             try {
-                    Clip clip = AudioSystem.getClip();
-                    clip.open(AudioSystem.getAudioInputStream(new File("assents/ok.wav")));
-                    clip.start();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+                Clip clip = AudioSystem.getClip();
+                clip.open(AudioSystem.getAudioInputStream(resolverArquivo("assents/ok.wav")));
+                clip.start();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         });
 
         branco.addActionListener(e -> {
-            //voto.setText("BRANCO");
             votacao.votarBranco();
             atualizarTela(votacao, voto, nome, partido, foto, vice);
         });
@@ -553,7 +536,6 @@ public class Urna {
         footer.add(txtInfo);
         footer.add(lblAcess);
 
-        // ── Monta a janela ────────────────────────────────────────────────
         janela.add(header);
         janela.add(main);
         janela.add(footer);
@@ -565,3 +547,4 @@ public class Urna {
         abrirUrna();
     }
 }
+

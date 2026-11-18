@@ -1,8 +1,9 @@
+package br.edu.unijorge.urnacidada.visao;
+
 import javax.swing.*;
 import java.awt.*;
 
 import br.edu.unijorge.urnacidada.infraestrutura.BancoDeDados;
-
 
 public class Menu {
 
@@ -27,17 +28,6 @@ public class Menu {
             ExibicaoCandidatos.abrir();
         });
 
-        // Botão: Relatório
-        /*JButton btnRelatorio = new JButton("Relatório");
-        btnRelatorio.setBounds(75, 210, 250, 45);
-        btnRelatorio.setBackground(Color.BLACK);
-        btnRelatorio.setForeground(Color.WHITE);
-        btnRelatorio.setFont(new Font("Arial", Font.PLAIN, 14));
-        btnRelatorio.addActionListener(e -> {
-            // TODO: abrir interface de Relatório
-            JOptionPane.showMessageDialog(janela, "Tela de Relatório (em desenvolvimento)");
-        });*/
-
         // Botão: Contagem de Votos
         JButton btnContagem = new JButton("Contagem de Votos");
         btnContagem.setBounds(75, 150, 250, 45);
@@ -48,8 +38,8 @@ public class Menu {
             ContagemVotos.abrir();
         });
 
-        // Botão: Urna Eletrônica → abre a interface do Main.java
-        JButton btnUrna = new JButton("Iniciar Votação");
+        // Botão: Urna Eletrônica
+        JButton btnUrna = new JButton("Abrir Sessão");
         btnUrna.setBounds(75, 230, 250, 45);
         btnUrna.setBackground(Color.GREEN);
         btnUrna.setForeground(Color.BLACK);
@@ -75,7 +65,6 @@ public class Menu {
 
         janela.add(titulo);
         janela.add(btnCandidatos);
-
         janela.add(btnContagem);
         janela.add(btnUrna);
         janela.add(lblSessao);
@@ -115,3 +104,4 @@ public class Menu {
         main();
     }
 }
+

@@ -1,3 +1,5 @@
+package br.edu.unijorge.urnacidada.visao;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
@@ -21,7 +23,6 @@ public class ContagemVotos {
     }
 
     public static void abrir() {
-        // Lê os votos gravados no banco de dados (Firebase Firestore)
         List<Voto> votos;
         try {
             votos = BancoDeDados.votos().listar();
@@ -47,13 +48,11 @@ public class ContagemVotos {
         titulo.setBorder(BorderFactory.createEmptyBorder(15, 0, 15, 0));
         janela.add(titulo, BorderLayout.NORTH);
 
-        // Tabela baseada na mesma lógica de ExibicaoCandidatos
         String[] colunas = {"Nome", "Número", "Partido", "Cargo", "Votos", "%"};
         DefaultTableModel modelo = new DefaultTableModel(colunas, 0);
 
         List<Cargo> cargos = CatalogoCandidatos.criarCargos();
         for (Cargo cargo : cargos) {
-            // Candidatos do cargo
             for (Candidato c : cargo.getCandidatos()) {
                 int votosCandidato = apuracao.votosDoCandidato(c);
                 modelo.addRow(new Object[]{
@@ -65,7 +64,6 @@ public class ContagemVotos {
                         formatarPercentual(apuracao.percentual(votosCandidato, cargo))
                 });
             }
-            // Voto em branco do respectivo cargo
             int brancos = apuracao.votosEmBranco(cargo);
             modelo.addRow(new Object[]{
                     "VOTO EM BRANCO",
@@ -76,7 +74,6 @@ public class ContagemVotos {
                     formatarPercentual(apuracao.percentual(brancos, cargo))
             });
 
-            // Voto nulo do respectivo cargo
             int nulos = apuracao.votosNulos(cargo);
             modelo.addRow(new Object[]{
                     "VOTO NULO",
@@ -98,7 +95,6 @@ public class ContagemVotos {
         scroll.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         janela.add(scroll, BorderLayout.CENTER);
 
-        // Rodapé: de onde vieram os dados e quantos votos foram lidos
         JLabel fonte = new JLabel("Fonte: " + BancoDeDados.descricao() + "  |  " + votos.size() + " voto(s) registrado(s)",
                 SwingConstants.CENTER);
         fonte.setFont(new Font("Arial", Font.PLAIN, 12));
@@ -109,3 +105,4 @@ public class ContagemVotos {
         janela.setVisible(true);
     }
 }
+
