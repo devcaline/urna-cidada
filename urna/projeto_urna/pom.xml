@@ -6,7 +6,7 @@
   <artifactId>urna-cidada</artifactId>
   <version>0.1.0-SNAPSHOT</version>
   <name>Urna Cidadã</name>
-  <description>Base de domínio da simulação educativa Urna Cidadã.</description>
+  <description>Simulador educativo de urna eletrônica (Java, Swing e Firebase) do projeto de extensão Urna Cidadã.</description>
   <properties>
     <maven.compiler.release>17</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -45,7 +45,7 @@
         <artifactId>maven-jar-plugin</artifactId>
         <version>3.4.2</version>
         <configuration>
-          <archive><manifest><mainClass>br.edu.unijorge.urnacidada.Main</mainClass></manifest></archive>
+          <archive><manifest><mainClass>br.edu.unijorge.urnacidada.visao.Menu</mainClass></manifest></archive>
         </configuration>
       </plugin>
     </plugins>

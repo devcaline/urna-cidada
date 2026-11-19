@@ -26,3 +26,5 @@ nbproject/private/
 *firebase-adminsdk*.json
 google-services.json
 .env
+# Senha do mesário: cada integrante cria o seu arquivo, nunca vai para o GitHub
+senha-mesario.txt

@@ -20,23 +20,25 @@ Material complementar para a apresentação do projeto de extensão:
 
 ▶️ Assista no YouTube: <https://youtu.be/XhsV7PPJD10>
 
-## ✨ Funcionalidades previstas
+## ✨ Funcionalidades
 
-- Votação em sequência para dois cargos (proporcional e majoritário)
-- Teclado numérico da urna com **Corrige**, **Branco** e **Confirma**
-- Exibição do candidato (nome, número e partido) antes da confirmação
-- Tratamento de voto **nulo** e voto **em branco**
-- Registro dos votos no Cloud Firestore
-- Apuração e exibição dos resultados
+- Votação em sequência para dois cargos: Deputado Federal (4 dígitos) e Presidente (2 dígitos)
+- Teclado numérico com **Corrige**, **Branco** e **Confirma**, como na urna do TSE
+- Exibição de nome, partido, foto e vice do candidato antes da confirmação
+- Voto **nulo** (número inexistente) e voto **em branco**
+- Votação contínua, um eleitor após o outro
+- Área do mesário com senha: abrir a sessão com conferência dos votos zerados, encerrar a votação e consultar a contagem
+- Votos gravados no Firebase Cloud Firestore, com modo **ENSAIO** para testes e **OFICINA** para a votação real
+- Apuração com votos e percentuais por candidato, brancos e nulos
 
 ## 🧱 Conceitos de POO aplicados
 
-O código deve ser organizado em classes e pacotes coerentes com o paradigma orientado a objetos, aplicando:
-
-- **Encapsulamento**
-- **Herança**
-- **Polimorfismo**
-- **Abstração**
+| Conceito | Onde |
+|---|---|
+| **Encapsulamento** | `Candidato`, `Cargo`, `Partido` e `Voto` são imutáveis e validam os dados no construtor; `VotacaoEleitor` só muda de estado por métodos com regras; `Mesario` guarda a senha sem expô-la |
+| **Herança** | `RepositorioVotosFirestore` estende `RepositorioVotosBase`; `ErroRepositorioException` estende `RuntimeException` |
+| **Polimorfismo** | a urna trabalha com a interface `RepositorioVotos` sem depender do Firebase; sobrescrita de `gravar()` e `listar()`; sobrecarga dos construtores de `Candidato` |
+| **Abstração** | interface `RepositorioVotos`, classe abstrata `RepositorioVotosBase`, `VotacaoEleitor` e `SessaoVotacao` separadas da interface gráfica |
 
 ## 🛠️ Tecnologias
 
@@ -51,7 +53,6 @@ O código deve ser organizado em classes e pacotes coerentes com o paradigma ori
 ```text
 urna-cidada/
 ├── docs/                                  # Casos de uso, requisitos e modelagem Firestore
-├── assents/                               # Imagens dos candidatos e efeitos sonoros (.wav)
 ├── urna/
 │   └── projeto_urna/                      # Projeto Java Maven principal
 │       ├── pom.xml                        # Configurações do Maven e dependências (Firebase, JUnit)
@@ -59,17 +60,24 @@ urna-cidada/
 │           ├── main/
 │           │   ├── java/br/edu/unijorge/urnacidada/
 │           │   │   ├── dados/             # Catálogo inicial de partidos e candidatos fictícios
-│           │   │   ├── dominio/           # Modelos de domínio (Candidato, Cargo, Partido, Voto, Usuario)
+│           │   │   ├── dominio/           # Modelos de domínio (Candidato, Cargo, Partido, Voto, Mesario)
 │           │   │   ├── infraestrutura/    # Conexão e repositório Firebase Cloud Firestore
 │           │   │   ├── repositorio/       # Interfaces e contratos de persistência
 │           │   │   ├── servico/           # Regras de votação (VotacaoEleitor) e apuração
-│           │   │   ├── visao/             # Telas Java Swing (Menu, Urna, Contagem, Exibição)
-│           │   │   └── Main.java          # Classe de entrada alternativa
+│           │   │   └── visao/             # Telas Java Swing (Menu, Urna, Contagem, Exibição)
 │           │   └── resources/
-│           │       └── assents/           # Recursos estáticos empacotados pelo Maven
+│           │       └── assents/           # Fotos dos candidatos e sons da urna (.wav)
 │           └── test/                      # Testes unitários com JUnit 5
 └── README.md
 ```
+
+## ▶️ Como rodar
+
+1. Instale o **JDK 17 ou superior** e abra a pasta `urna-cidada` no IntelliJ (projeto Maven em `urna/projeto_urna`).
+2. Coloque a chave do Firebase (`*firebase-adminsdk*.json`) e o arquivo `senha-mesario.txt` na pasta raiz `urna-cidada/`. Os dois são pedidos à equipe em mensagem privada e nunca vão para o GitHub (veja [docs/banco-de-dados.md](docs/banco-de-dados.md)).
+3. Rode a classe `br.edu.unijorge.urnacidada.visao.Menu`.
+4. Escolha **ENSAIO** para testar ou **OFICINA** para a votação real.
+5. Testes automáticos: aba Maven → Lifecycle → `test`.
 
 ## 📌 Resumo das Implementações
 
@@ -86,31 +94,20 @@ O projeto **Urna Cidadã** foi estruturado e refatorado aplicando as boas práti
 
 ### 🔄 Controle de Sessão: Abertura e Encerramento
 
-O sistema oferece gerenciamento completo do ciclo da sessão eleitoral:
-
-1. **Seleção de Modo (Inicialização):**
-   - Ao iniciar pelo [Menu.java](file:///urna/projeto_urna/src/main/java/br/edu/unijorge/urnacidada/visao/Menu.java), o sistema solicita o modo de operação:
-     - **ENSAIO (teste):** direciona os registros para a sessão `ensaio`, ideal para testes de mesa e demonstrações sem poluir os dados oficiais.
-     - **OFICINA (votação real):** direciona os registros para a sessão oficial da escola (`oficina-2026`).
-
-2. **Abertura da Sessão:**
-   - Através do botão **"Abrir Sessão"**, a urna verifica a conectividade com o Cloud Firestore e libera a tela de votação para o primeiro eleitor.
-   - A votação segue rigorosamente as regras eleitorais: primeiro para **Deputado Federal** (4 dígitos) e em seguida para **Presidente** (2 dígitos).
-
-3. **Encerramento da Sessão e Votação Contínua:**
-   - Ao confirmar o último cargo, o voto é gravado na nuvem, o som clássico do TSE é reproduzido e a tela de **FIM** é exibida com o registro de data e hora.
-   - O sistema oferece diálogo de confirmação para **Encerrar Sessão**:
-     - **Sim (Encerrar):** finaliza a rodada e retorna ao Menu Principal, permitindo que os mesários abram a **Contagem de Votos** e realizem a apuração final.
-     - **Não / Próximo Eleitor:** após um breve intervalo a urna reinicializa automaticamente para o próximo aluno votar, garantindo a dinâmica contínua da oficina.
-
+1. **Seleção de modo:** ao iniciar pelo `Menu` (pacote `visao`), o sistema pergunta o modo de operação:
+   - **ENSAIO (teste):** grava na sessão `ensaio`, para testes e demonstrações.
+   - **OFICINA (votação real):** grava na sessão oficial `oficina-2026`.
+2. **Abertura da sessão:** o botão **"Abrir Sessão"** pede a senha do mesário e mostra a **conferência inicial** com os votos já registrados. Na oficina, a votação só é liberada com a contagem zerada (RN16).
+3. **Votação contínua:** primeiro **Deputado Federal** (4 dígitos), depois **Presidente** (2 dígitos). Ao confirmar o último cargo, o voto é gravado, o som do TSE toca, a tela de **FIM** aparece e, em seguida, a urna abre para o próximo eleitor.
+4. **Encerramento:** só o mesário encerra, pelo botão **"Mesário"** da urna, com senha e no intervalo entre um eleitor e outro. Depois disso, a **Contagem de Votos** (também protegida por senha) mostra a apuração.
 
 ## 📋 Etapas
 
-- [ ] Formação do grupo (até 5 integrantes) e definição do escopo
-- [ ] Modelagem: casos de uso, classes e dados no Firebase
-- [ ] Desenvolvimento do simulador (Swing + Firebase)
+- [x] Formação do grupo (até 5 integrantes) e definição do escopo
+- [x] Modelagem: casos de uso, classes e dados no Firebase
+- [x] Desenvolvimento do simulador (Swing + Firebase)
 - [ ] Material educativo sobre fake news e conteúdos gerados por IA
-- [ ] Testes internos e ajustes de usabilidade
+- [x] Testes internos e ajustes de usabilidade
 - [ ] Oficina na escola parceira
 - [ ] Questionário de percepção (antes e depois da oficina)
 - [ ] Relatório final

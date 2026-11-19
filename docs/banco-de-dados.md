@@ -141,3 +141,11 @@ Para uma escola nova, mude `SESSAO_PADRAO` em `BancoDeDados` ou rode `Inicializa
 - Mudar `sessoes/{id}.estado` para `EM_ANDAMENTO` e `ENCERRADA` pelo mesário (**RF16**, **RF17**, **RN23**) e só abrir a urna com a sessão `EM_ANDAMENTO`.
 - Autenticação dos mesários (**RF14**): por exemplo, uma coleção `mesarios/{id}` com a senha guardada como *hash* com *salt*, nunca em texto puro.
 - Liberar a tela de Contagem só para mesário autenticado e só após o encerramento (**RN19**, **RN21**).
+
+## Senha do mesário
+
+A senha administrativa (RF14) fica fora do código e do GitHub. Cada integrante cria, na pasta raiz do repositório (`urna-cidada/`), um arquivo `senha-mesario.txt` contendo só a senha, combinada com a equipe em mensagem privada. O `.gitignore` bloqueia esse arquivo.
+
+Alternativas: `-Durna.senha=...` nas opções da JVM ou a variável de ambiente `URNA_SENHA`.
+
+A senha é pedida para abrir a sessão (com a conferência dos votos zerados), para abrir a Contagem de Votos e, na urna, pelo botão "Mesário", para encerrar a votação entre um eleitor e outro.

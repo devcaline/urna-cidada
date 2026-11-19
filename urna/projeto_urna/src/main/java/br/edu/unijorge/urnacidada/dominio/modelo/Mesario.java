@@ -1,9 +1,15 @@
 package br.edu.unijorge.urnacidada.dominio.modelo;
 
-/** Papel de mesário; não armazena senha nem executa operações administrativas. */
-public final class Mesario extends Usuario {
-    public Mesario(String id, String nome) { super(id, nome); }
+/** Mesário da sessão: guarda a senha administrativa e só permite conferi-la, nunca lê-la (RF14, RN18). */
+public final class Mesario {
+    private final String senha;
 
-    @Override
-    public String getPapel() { return "MESARIO"; }
+    public Mesario(String senha) {
+        this.senha = Validacao.textoObrigatorio(senha, "Senha do mesário");
+    }
+
+    /** Confere a senha digitada sem expor a senha guardada. */
+    public boolean validarSenha(String tentativa) {
+        return tentativa != null && senha.equals(tentativa);
+    }
 }

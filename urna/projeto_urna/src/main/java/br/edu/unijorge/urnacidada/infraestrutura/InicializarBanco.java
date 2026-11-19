@@ -61,7 +61,7 @@ public final class InicializarBanco {
                 dados.put("numero", candidato.getNumero());
                 dados.put("partido", candidato.getPartido().getSigla());
                 dados.put("vice", candidato.getVice());
-                dados.put("foto", candidato.getFoto_src());
+                dados.put("foto", candidato.getFotoSrc());
                 lote.set(documentoCargo.collection(EsquemaFirestore.CANDIDATOS).document(candidato.getNumero()), dados);
                 partidos.putIfAbsent(candidato.getPartido().getSigla(), candidato.getPartido());
             }

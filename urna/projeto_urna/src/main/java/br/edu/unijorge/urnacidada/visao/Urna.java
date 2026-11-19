@@ -4,11 +4,13 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.net.URL;
 import java.io.IOException;
 import javax.sound.sampled.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
@@ -25,26 +27,50 @@ import br.edu.unijorge.urnacidada.servico.VotacaoEleitor;
 
 public class Urna {
 
-    public static File resolverArquivo(String caminhoRelativo) {
-        File f = new File(caminhoRelativo);
-        if (f.exists()) {
-            return f;
+    private static final String SEM_FOTO = "assents/sem_foto.jpg";
+
+    // Fotos já carregadas: cada imagem é lida uma vez só, e não a cada tecla
+    private static final Map<String, ImageIcon> FOTOS = new HashMap<>();
+
+    /** Arquivo de src/main/resources (fotos e sons), que vai junto com o programa compilado. */
+    private static URL recurso(String caminho) {
+        URL url = Urna.class.getResource("/" + caminho);
+        if (url == null) {
+            System.err.println("Recurso não encontrado: " + caminho);
         }
-        String[] tentativas = {
-            "interface/" + caminhoRelativo,
-            "src/main/resources/" + caminhoRelativo,
-            "urna/projeto_urna/src/main/resources/" + caminhoRelativo,
-            "urna/projeto_urna/" + caminhoRelativo,
-            "../interface/" + caminhoRelativo,
-            "../../interface/" + caminhoRelativo
-        };
-        for (String t : tentativas) {
-            File alt = new File(t);
-            if (alt.exists()) {
-                return alt;
-            }
+        return url;
+    }
+
+    private static ImageIcon lerFoto(String caminho) {
+        try {
+            Image img = ImageIO.read(recurso(caminho));
+            return new ImageIcon(img.getScaledInstance(140, 175, Image.SCALE_SMOOTH));
+        } catch (Exception e) {
+            System.err.println("Não foi possível carregar a foto " + caminho + ": " + e);
+            return null;
         }
-        return f;
+    }
+
+    public static void definirFoto(JLabel foto, String caminho) {
+        ImageIcon icone = FOTOS.computeIfAbsent(caminho == null ? SEM_FOTO : caminho, Urna::lerFoto);
+        foto.setIcon(icone);
+        if (icone == null) {
+            foto.setFont(new Font("Arial", Font.PLAIN, 11));
+            foto.setForeground(new Color(100, 100, 105));
+            foto.setText("<html><center>SEM<br>FOTO</center></html>");
+        } else {
+            foto.setText("");
+        }
+    }
+
+    private static void tocarSom(String caminho) {
+        try {
+            Clip clip = AudioSystem.getClip();
+            clip.open(AudioSystem.getAudioInputStream(recurso(caminho)));
+            clip.start();
+        } catch (Exception ex) {
+            System.err.println("Não foi possível tocar " + caminho + ": " + ex);
+        }
     }
 
     public static JLabel carregar_imagem(String src){
@@ -56,20 +82,6 @@ public class Urna {
         foto.setHorizontalAlignment(SwingConstants.CENTER);
         definirFoto(foto, src);
         return foto;
-    }
-
-    public static void definirFoto(JLabel foto, String src) {
-        try {
-            File arquivo = resolverArquivo(src);
-            Image img = ImageIO.read(arquivo);
-            foto.setIcon(new ImageIcon(img.getScaledInstance(140, 175, Image.SCALE_SMOOTH)));
-            foto.setText("");
-        } catch (Exception e) {
-            foto.setIcon(null);
-            foto.setFont(new Font("Arial", Font.PLAIN, 11));
-            foto.setForeground(new Color(100, 100, 105));
-            foto.setText("<html><center>SEM<br>FOTO</center></html>");
-        }
     }
 
     public static String formatarVisor(String numero, int digitos){
@@ -99,7 +111,7 @@ public class Urna {
             voto.setText("BRANCO");
             nome.setText("BRANCO");
             partido.setText("PARTIDO INEXISTENTE");
-            definirFoto(foto, "assents/sem_foto.jpg");
+            definirFoto(foto, SEM_FOTO);
             return;
         }
 
@@ -112,16 +124,16 @@ public class Urna {
                 if(encontrado.get().getVice() != null){                        // ← NOVO
                     vice.setText("VICE: " + encontrado.get().getVice());
                 }
-                definirFoto(foto, encontrado.get().getFoto_src());
+                definirFoto(foto, encontrado.get().getFotoSrc());
             }else{
                 nome.setText("VOTO NULO");
                 partido.setText("NÚMERO ERRADO");
-                definirFoto(foto, "assents/sem_foto.jpg");
+                definirFoto(foto, SEM_FOTO);
             }
         }else{
             nome.setText("");
             partido.setText("");
-            definirFoto(foto, "assents/sem_foto.jpg");
+            definirFoto(foto, SEM_FOTO);
         }
     }
 
@@ -139,6 +151,12 @@ public class Urna {
 
     // ── Abertura da janela principal ──────────────────────────────────────────
     public static void abrirUrna() throws IOException {
+        // A urna só abre com a sessão liberada pelo mesário (RN17, RN23)
+        if (Menu.sessao() == null || !Menu.sessao().isEmAndamento()) {
+            JOptionPane.showMessageDialog(null, "A votação ainda não foi liberada pelo mesário.");
+            Menu.abrir();
+            return;
+        }
         VotacaoEleitor votacao = new VotacaoEleitor(CatalogoCandidatos.criarCargos());
 
         // Sem acesso ao Firebase a urna não abre: nenhum voto pode ficar fora do banco
@@ -150,7 +168,7 @@ public class Urna {
             JOptionPane.showMessageDialog(null,
                     "SEM CONEXÃO COM O BANCO DE DADOS (FIREBASE).\nA votação não pode começar.\n\n" + ex.getMessage(),
                     "Erro no banco de dados", JOptionPane.ERROR_MESSAGE);
-            Menu.main();
+            Menu.abrir();
             return;
         }
         // ID do voto da etapa atual. Só muda depois que o voto é gravado: se a gravação falhar e o
@@ -192,6 +210,25 @@ public class Urna {
         lblTSE.setBounds(65, 33, 280, 16);
         lblTSE.setFont(new Font("Arial", Font.PLAIN, 10));
         lblTSE.setForeground(new Color(160, 160, 170));
+
+        // Botão do mesário: encerra a votação entre um eleitor e outro (RF17, RN18, RN20)
+        JButton btnMesario = new JButton("MESÁRIO");
+        btnMesario.setBounds(395, 18, 100, 28);
+        btnMesario.setFont(new Font("Arial", Font.BOLD, 11));
+        btnMesario.setBackground(new Color(55, 58, 68));
+        btnMesario.setForeground(Color.WHITE);
+        btnMesario.setFocusPainted(false);
+        btnMesario.addActionListener(e -> {
+            if (!votacao.isAguardandoEleitor()) {
+                JOptionPane.showMessageDialog(janela, "Aguarde o eleitor terminar de votar.");
+                return;
+            }
+            if (AcessoMesario.confirmar(janela, "encerrar a votação")) {
+                Menu.sessao().encerrar();
+                janela.dispose();
+                Menu.abrir();
+            }
+        });
 
         // Divisor vertical 1
         JPanel div1 = new JPanel();
@@ -235,6 +272,7 @@ public class Urna {
         header.add(div2);
         header.add(lblHora);
         header.add(lblData);
+        header.add(btnMesario);
 
         // ════════════════════════════════════════════════════════════════════
         //  PAINEL PRINCIPAL — cinza claro
@@ -415,13 +453,7 @@ public class Urna {
 
             // 2. confirmou o último cargo: FIM
             if(votacao.isEncerrada()){
-                try {
-                    Clip clip = AudioSystem.getClip();
-                    clip.open(AudioSystem.getAudioInputStream(resolverArquivo("assents/confirma-urna.wav")));
-                    clip.start();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
+                tocarSom("assents/confirma-urna.wav");
 
                 main.removeAll();
                 main.setBackground(Color.WHITE);
@@ -453,20 +485,8 @@ public class Urna {
                 main.repaint();
                 main.revalidate();
                 
-                int resposta = JOptionPane.showConfirmDialog(
-                    null,
-                    "Deseja Encerrar Sessão?",
-                    "Confirmar Encerramento",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE
-                );
-                if (resposta == JOptionPane.YES_OPTION) {
-                    janela.dispose();
-                    Menu.main();
-                    return;
-                }
-
-                Timer timer = new Timer(1000, evt -> {
+                // Depois de 3 segundos, abre a urna para o próximo eleitor
+                Timer timer = new Timer(3000, evt -> {
                     janela.dispose();
                     try {
                         abrirUrna();
@@ -483,13 +503,7 @@ public class Urna {
             // 3. confirmou e ainda tem cargo: mostra o próximo
             cargo.setText(votacao.getCargoAtual().getNome());
             atualizarTela(votacao, voto, nome, partido, foto, vice);
-            try {
-                Clip clip = AudioSystem.getClip();
-                clip.open(AudioSystem.getAudioInputStream(resolverArquivo("assents/ok.wav")));
-                clip.start();
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+            tocarSom("assents/ok.wav");
         });
 
         branco.addActionListener(e -> {
@@ -542,9 +556,4 @@ public class Urna {
 
         janela.setVisible(true);
     }
-
-    public static void main(String[] args) throws IOException {
-        abrirUrna();
-    }
 }
-

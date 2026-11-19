@@ -20,9 +20,7 @@ public class VotacaoEleitor {
         return branco;
     }
 
-    public int getEtapaAtual() {
-        return etapaAtual;
-    }
+
 
     /** Todo eleitor começa na primeira etapa,
      * com o visor vazio e sem voto em branco. */
@@ -75,13 +73,9 @@ public class VotacaoEleitor {
     }
 
 
-    /** Senha do mesário para encerrar o loop de votação: 9990 em Deputado, 99 em Presidente. */
-    public boolean isSenhaDeSaida(){
-        if(isEncerrada() || branco){
-            return false;
-        }
-        String senha = getCargoAtual().getQuantidadeDigitos() == 4 ? "9990" : "99";
-        return numeroDigitado.equals(senha);
+    /** Nenhuma tecla apertada no primeiro cargo: é o intervalo entre um eleitor e outro. */
+    public boolean isAguardandoEleitor(){
+        return etapaAtual == 0 && numeroDigitado.isEmpty() && !branco;
     }
 
     public Optional<Candidato> getCandidatoEncontrado(){

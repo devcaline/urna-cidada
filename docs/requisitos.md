@@ -128,7 +128,7 @@ RN30 — Branco com número digitado: o botão Branco só tem efeito com o visor
 
 **RN31 — Votação contínua:** ao iniciar a votação, a urna recebe um eleitor após o outro, sem cadastro prévio; o controle de quem já votou é feito pelo mesário presencialmente.
 
-**RN32 — Senha de encerramento:** o mesário encerra a votação e volta ao menu digitando 9990 na etapa de Deputado Federal ou 99 na etapa de Presidente e pressionando Confirma. A senha não é registrada como voto.
+**RN32 — Encerramento pelo mesário:** o mesário encerra a votação pelo botão "Mesário" da urna, informando a senha administrativa, somente no intervalo entre um eleitor e outro. A senha não é digitada no teclado da urna nem fica registrada no código ou na documentação (RN18).
 
 ## 5. Fluxo básico da votação:
 1. O eleitor inicia a sessão de votação.

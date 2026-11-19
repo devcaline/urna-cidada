@@ -1,0 +1,94 @@
+classDiagram
+    direction TB
+    class Partido {
+        -String nome
+        -String sigla
+    }
+    class Cargo {
+        -String nome
+        -int quantidadeDigitos
+        -List~Candidato~ candidatos
+        +adicionarCandidato(Candidato)
+        +buscarCandidato(String) Optional~Candidato~
+        +validarNumero(String) boolean
+    }
+    class Candidato {
+        -String nome
+        -String numero
+        -Partido partido
+        -Cargo cargo
+        -String fotoSrc
+        -String vice
+    }
+    class Voto {
+        -String id
+        -TipoVoto tipo
+        -Cargo cargo
+        -Candidato candidato
+        -boolean confirmado
+    }
+    class TipoVoto {
+        <<enumeration>>
+        CANDIDATO
+        BRANCO
+        NULO
+    }
+    class EstadoSessao {
+        <<enumeration>>
+        NAO_INICIADA
+        EM_ANDAMENTO
+        ENCERRADA
+    }
+    class Mesario {
+        -String senha
+        +validarSenha(String) boolean
+    }
+    class VotacaoEleitor {
+        -List~Cargo~ cargos
+        -int etapaAtual
+        -String numeroDigitado
+        -boolean branco
+        +digitar(String)
+        +corrigir()
+        +votarBranco()
+        +confirmar() boolean
+        +isNulo() boolean
+        +isAguardandoEleitor() boolean
+    }
+    class SessaoVotacao {
+        -boolean ensaio
+        -EstadoSessao estado
+        +iniciar(int)
+        +encerrar()
+    }
+    class Apuracao {
+        +votosDoCandidato(Candidato) int
+        +votosEmBranco(Cargo) int
+        +votosNulos(Cargo) int
+        +percentual(int, Cargo) double
+    }
+    class RepositorioVotos {
+        <<interface>>
+        +salvar(Voto)
+        +listar() List~Voto~
+    }
+    class RepositorioVotosBase {
+        <<abstract>>
+        +salvar(Voto)
+        #gravar(Voto)*
+    }
+    class RepositorioVotosFirestore {
+        #gravar(Voto)
+        +listar() List~Voto~
+    }
+    Cargo "1" o-- "*" Candidato
+    Candidato --> Partido
+    Voto --> Cargo
+    Voto --> "0..1" Candidato
+    Voto --> TipoVoto
+    SessaoVotacao --> EstadoSessao
+    VotacaoEleitor --> "*" Cargo
+    Apuracao ..> Voto
+    RepositorioVotos <|.. RepositorioVotosBase
+    RepositorioVotosBase <|-- RepositorioVotosFirestore
+    RepositorioVotos ..> Voto
